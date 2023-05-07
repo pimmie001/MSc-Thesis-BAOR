@@ -10,6 +10,7 @@ def find_cycles(arcs, nodes, K):
 
 
     cycles = set()
+    cycles_sorted = set()
     for node in graph:
         visited = set([node])
         stack = [(node, [node])] # (current, path)
@@ -19,9 +20,11 @@ def find_cycles(arcs, nodes, K):
                 continue
             else: # check for cycle
                 if path[0] in graph[current]:
-                    cycle = tuple(sorted(path)) ## TODO: this will mess up order of cycle (cycle might be 213 but will now become 123)
-                    if cycle not in cycles:
+                    cycle = tuple(path)
+                    cycle_sorted = tuple(sorted(path))
+                    if cycle_sorted not in cycles_sorted:
                         cycles.add(cycle)
+                        cycles_sorted.add(cycle_sorted)
             # continue path:
             for neighbor in graph[current]:
                 if neighbor not in visited:
@@ -46,6 +49,7 @@ def find_cycles_K(arcs, nodes, K):
 
 
     cycles = set()
+    cycles_sorted = set()
     for node in graph:
         visited = set([node])
         stack = [(node, [node])] # (current, path)
@@ -53,9 +57,11 @@ def find_cycles_K(arcs, nodes, K):
             (current, path) = stack.pop()
             if len(path) == K:
                 if path[0] in graph[current]: # can complete cycle?
-                    cycle = tuple(sorted(path))
-                    if cycle not in cycles:
+                    cycle = tuple(path)
+                    cycle_sorted = tuple(sorted(path))
+                    if cycle_sorted not in cycles_sorted:
                         cycles.add(cycle)
+                        cycles_sorted.add(cycle_sorted)
             else:
                 for neighbor in graph[current]:
                     if neighbor not in visited:
