@@ -1,13 +1,18 @@
-def find_cycles(arcs, nodes, K):
-    """returns all cycles of size k or less"""
-
-    # given arcs, create a graph
+def makegraph(arcs, nodes):
     graph = {}
     for node in nodes:
         graph[node] = []
     for arc in arcs:
         graph[arc[0]].append(arc[1])
+    return graph
 
+
+# TODO: CONFIRM preprocessing
+# TODO: check efficiency? 
+def find_cycles(arcs, nodes, K):
+    """returns all cycles of size K or less"""
+
+    graph = makegraph(arcs, nodes)
 
     cycles = set()
     cycles_sorted = set()
@@ -31,22 +36,14 @@ def find_cycles(arcs, nodes, K):
                     visited.add(neighbor)
                     stack.append((neighbor, path + [neighbor]))
 
-
     return [list(cycle) for cycle in cycles]
 
 
 
-
 def find_cycles_K(arcs, nodes, K):
-    """Similiar to find_cycles function but will only return cycles of size K (not less than K)"""
+    """returns all cycles of size K"""
 
-    # given arcs, create a graph
-    graph = {}
-    for node in nodes:
-        graph[node] = []
-    for arc in arcs:
-        graph[arc[0]].append(arc[1])
-
+    graph = makegraph(arcs, nodes)
 
     cycles = set()
     cycles_sorted = set()
@@ -68,6 +65,38 @@ def find_cycles_K(arcs, nodes, K):
                         visited.add(neighbor)
                         stack.append((neighbor, path + [neighbor]))
 
+    return [list(cycle) for cycle in cycles]
+
+
+
+# TODO: test this function (example paper)
+# TODO: Preprocessing to remove unneccesasary variables
+def find_half_cycles(arcs, nodes, M):
+    """find half cycles of size at most M"""
+
+    graph = makegraph(arcs, nodes)
+
+    cycles = set()
+    cycles_sorted = set()
+    for node in graph:
+        visited = set([node])
+        stack = [(node, [node])] # (current, path)
+        while stack:
+            (current, path) = stack.pop()
+            if len(path) == M+1: # path too long
+                continue
+            else:
+                if len(path) > 1: ######## TODO ???? 
+                    cycle = tuple(path)
+                    cycle_sorted = tuple(sorted(path))
+                    if cycle_sorted not in cycles_sorted:
+                        cycles.add(cycle)
+                        cycles_sorted.add(cycle_sorted)
+            # continue path:
+            for neighbor in graph[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    stack.append((neighbor, path + [neighbor]))
 
     return [list(cycle) for cycle in cycles]
 
