@@ -27,7 +27,7 @@ def HCF(arcs, nodes, K):
     ### constraints
     # constraint (5)
     for node in nodes:
-        active_variables_half = [] # only count 0.5 in constraint (5) of HCF
+        active_variables_half = [] # only count for 0.5
         active_variables = []
         for i in range(len(H)):
             h = H[i]
@@ -56,6 +56,8 @@ def HCF(arcs, nodes, K):
             if left or right:
                 m.addConstr(sum(left) == sum(right))
 
+    # constraint (7): binary constraint
+
     # constraint (8)
     if K % 2 == 1: # only for odd K
         for i in range(len(H)):
@@ -64,8 +66,15 @@ def HCF(arcs, nodes, K):
                 m.addConstr(bin_vars[i] == 0)
 
 
-    ### solve and show results
+
     m.ModelSense = GRB.MAXIMIZE
+    ##################
+    # Show the current model
+    m.write("model.lp")  # Write the model to a file in LP format
+    #################
+
+    ### solve and show results
+    
     m.setParam( 'OutputFlag', False)
     m.optimize()
 

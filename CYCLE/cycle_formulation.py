@@ -1,6 +1,6 @@
 import gurobipy as gp
 from gurobipy import GRB
-gp.setParam('LogFile', 'gurobi.log')
+# gp.setParam('LogFile', 'gurobi.log')
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -10,6 +10,7 @@ from find_cycles import find_cycles
 
 def cycle_formulation(arcs, nodes, K):
     C = find_cycles(arcs, nodes, K) # set of cycles of size <= K
+    # print(C)
 
     ### create model
     m = gp.Model('KEP cycle formulation')
@@ -33,7 +34,7 @@ def cycle_formulation(arcs, nodes, K):
 
     ### solve and show results
     m.ModelSense = GRB.MAXIMIZE
-    # m.setParam( 'OutputFlag', False)
+    m.setParam( 'OutputFlag', False)
     m.optimize()
 
     if m.status == gp.GRB.OPTIMAL: # Check if the model is optimized successfully

@@ -1,4 +1,5 @@
 def makegraph(arcs, nodes):
+    """creates a graph given the arcs and nodes"""
     graph = {}
     for node in nodes:
         graph[node] = []
@@ -86,7 +87,7 @@ def find_half_cycles(arcs, nodes, M):
             if len(path) == M+1: # path too long
                 continue
             else:
-                if len(path) > 1: ######## TODO ???? 
+                if len(path) > 1: ######## TODO ????
                     cycle = tuple(path)
                     cycle_sorted = tuple(sorted(path))
                     if cycle_sorted not in cycles_sorted:
