@@ -15,12 +15,37 @@ class KEP_instance:
 
 
     def build_instance(self, arcs, nodes, K):
+        # build self made instance
+
         self.arcs = arcs
         self.nodes = nodes
         self.K = K
 
+        self.n = len(nodes)
+        self.m = len(arcs)
+
+
+        nodes_inv = {} # inverse of nodes. I.e. if nodes[i] = 'A' then nodes_inv[A] = i
+        for i, node in enumerate(nodes):
+            nodes_inv[node] = i
+
+
+        # build adjacency list and matrix
+        self.adj_list = {}
+        self.adj_matrix = np.zeros((self.n,self.n), dtype=int)
+
+        for v,w in arcs:
+            if v not in self.adj_list:
+                self.adj_list = [w]
+            else:
+                self.adj_list.append(w)
+
+            self.adj_matrix[nodes_inv[v], nodes_inv[w]] = 1
+
 
     def build_KD36_instance(self, path, K=None):
+        # build a KD 00036 instance given the path. optionally also sets K
+
         if K:
             self.K = K
 
