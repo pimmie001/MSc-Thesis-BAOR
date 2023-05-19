@@ -25,7 +25,7 @@ class KEP_instance:
         self.K = K
 
 
-        nodes_inv = {} # inverse of nodes. I.e. if nodes[i] = 'A' then nodes_inv[A] = i, important for ordering nodes
+        nodes_inv = {} # inverse of nodes. E.g. if nodes[i] = 'A' then nodes_inv[A] = i, important for ordering nodes
         for i, node in enumerate(nodes):
             nodes_inv[node] = i
 

@@ -10,7 +10,7 @@ class KEP_solution:
     def show_summary(self):
         print(f'Optimality: {self.optimality}')
         if not self.optimality:
-            print(f'LB: {self.LB}, UP: {self.UB}')
+            print(f'LB: {self.LB}, UB: {self.UB}')
         else:
             print(f'OBJ: {self.LB}')
         print(f'Runtime: {self.runtime}')
