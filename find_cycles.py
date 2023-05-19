@@ -9,8 +9,9 @@ def makegraph(arcs, nodes):
 
 
 # TODO: CONFIRM preprocessing
-# TODO: check efficiency? 
+# TODO: check efficiency? --> build new cycle detection using floyd algorithm
 def find_cycles(arcs, nodes, K):
+    # ! not sure if correct
     """returns all cycles of size K or less"""
 
     graph = makegraph(arcs, nodes)
@@ -42,6 +43,7 @@ def find_cycles(arcs, nodes, K):
 
 
 def find_cycles_K(arcs, nodes, K):
+    # ! not sure if correct
     """returns all cycles of size K"""
 
     graph = makegraph(arcs, nodes)
@@ -71,7 +73,7 @@ def find_cycles_K(arcs, nodes, K):
 
 
 # TODO: test this function (example paper)
-# TODO: Preprocessing to remove unneccesasary variables
+# ! Preprocessing to remove unneccesasary variables
 def find_half_cycles(arcs, nodes, M):
     """find half cycles of size at most M"""
 
