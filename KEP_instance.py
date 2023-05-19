@@ -15,14 +15,14 @@ class KEP_instance:
 
 
     def build_instance(self, arcs, nodes, K):
-        # build self made instance
+        """"build self made instance"""
 
+        self.filename = "self-made example"
         self.arcs = arcs
-        self.nodes = nodes
-        self.K = K
-
         self.n = len(nodes)
         self.m = len(arcs)
+        self.nodes = np.arange(self.n)
+        self.K = K
 
 
         nodes_inv = {} # inverse of nodes. I.e. if nodes[i] = 'A' then nodes_inv[A] = i, important for ordering nodes
@@ -49,9 +49,10 @@ class KEP_instance:
         if K:
             self.K = K
 
+        self.adj_list = {} # adjacency list
+
         with open(path) as fh:
             lines = re.split('\n', fh.read())
-
 
         for i, line in enumerate(lines):
             if '#' not in line:
@@ -62,25 +63,21 @@ class KEP_instance:
             if 'NUMBER ALTERNATIVES' in line:
                 self.n = int(re.search(r'\d+', line).group())
                 self.nodes = np.arange(self.n)
+                self.adj_matrix = np.zeros((self.n,self.n), dtype=int) # adjacency matrix
+                for i in range(self.n):
+                    self.adj_list[i] = []
+
             if 'NUMBER EDGES' in line:
                 self.m = int(re.search(r'\d+', line).group())
 
-
-        self.adj_list = {} # adjacency list
-        self.adj_matrix = np.zeros((self.n,self.n), dtype=int) # adjacency matrix
-
+        # create adj list and matrix:
         for line in lines[i:]:
             if not line:
                 continue
             A = re.split(',', line)
             a, b = int(A[0])-1, int(A[1])-1 # -1 bc nodes start counting at 1
 
-            # add to adjacency matrix
-            self.adj_matrix[a, b] = 1
+            self.adj_matrix[a, b] = 1 # add to adjacency matrix
 
-            # add to adjacency list
-            if a not in self.adj_list:
-                self.adj_list[a] = [b]
-            else:
-                self.adj_list[a].append(b)
+            self.adj_list[a].append(b) # add to adjacency list
 
