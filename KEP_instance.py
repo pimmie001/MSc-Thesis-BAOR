@@ -25,7 +25,7 @@ class KEP_instance:
         self.m = len(arcs)
 
 
-        nodes_inv = {} # inverse of nodes. I.e. if nodes[i] = 'A' then nodes_inv[A] = i
+        nodes_inv = {} # inverse of nodes. I.e. if nodes[i] = 'A' then nodes_inv[A] = i, important for ordering nodes
         for i, node in enumerate(nodes):
             nodes_inv[node] = i
 
@@ -35,10 +35,10 @@ class KEP_instance:
         self.adj_matrix = np.zeros((self.n,self.n), dtype=int)
 
         for v,w in arcs:
-            if v not in self.adj_list:
-                self.adj_list = [w]
+            if nodes_inv[v] not in self.adj_list:
+                self.adj_list[nodes_inv[v]] = [nodes_inv[w]]
             else:
-                self.adj_list.append(w)
+                self.adj_list[nodes_inv[v]].append(nodes_inv[w])
 
             self.adj_matrix[nodes_inv[v], nodes_inv[w]] = 1
 
@@ -61,6 +61,7 @@ class KEP_instance:
                 self.filename = re.search(r'# FILE NAME:\s*([^\s]+)', lines[0]).group(1)
             if 'NUMBER ALTERNATIVES' in line:
                 self.n = int(re.search(r'\d+', line).group())
+                self.nodes = np.arange(self.n)
             if 'NUMBER EDGES' in line:
                 self.m = int(re.search(r'\d+', line).group())
 
@@ -72,10 +73,10 @@ class KEP_instance:
             if not line:
                 continue
             A = re.split(',', line)
-            a, b = int(A[0]), int(A[1])
+            a, b = int(A[0])-1, int(A[1])-1 # -1 bc nodes start counting at 1
 
             # add to adjacency matrix
-            self.adj_matrix[a-1, b-1] = 1
+            self.adj_matrix[a, b] = 1
 
             # add to adjacency list
             if a not in self.adj_list:
