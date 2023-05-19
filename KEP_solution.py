@@ -7,6 +7,15 @@ class KEP_solution:
         self.feasible_check = None # is feasible checked?
 
 
+    def show_summary(self):
+        print(f'Optimality: {self.optimality}')
+        if not self.optimality:
+            print(f'LB: {self.LB}, UP: {self.UB}')
+        else:
+            print(f'OBJ: {self.LB}')
+        print(f'Runtime: {self.runtime}')
+
+
     def check_feasibility(self):
         pass # TODO 
 
