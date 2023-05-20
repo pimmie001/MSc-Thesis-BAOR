@@ -8,12 +8,12 @@ from find_cycles import find_half_cycles
 
 
 
-def HCF(arcs, nodes, K):
+def HCF_old(arcs, nodes, K):
     M = 1 + ceil(K/2)
     H = find_half_cycles(arcs, nodes, M)
 
     ### create model
-    m = gp.Model('KEP cycle formulation')
+    m = gp.Model('KEP half-cycle formulation (old version)')
 
 
     ### variables
