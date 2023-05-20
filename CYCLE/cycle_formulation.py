@@ -89,8 +89,9 @@ def cycle_formulation(I):
     m.setParam('OutputFlag', False)
     m.optimize()
 
-    ### show solution (progress)
+    ### make solution class
     solution = KEP_solution(I)
+    solution.formulation = 'CF'
     solution.optimality = m.Status == GRB.OPTIMAL
     solution.runtime = m.Runtime
     solution.num_vars = m.NumVars
@@ -98,6 +99,9 @@ def cycle_formulation(I):
     solution.LB = m.ObjVal # best lower bound (= objective value current solution)
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
+
+    ### determine chosen cycles (for ao feasibility check)
+    solution.chosen_cycles = [C[i] for i in range(len(C)) if np.isclose(m.getVars()[i].x, 1.0)]
 
     ### solve relaxation
     m_relax = m.relax()
