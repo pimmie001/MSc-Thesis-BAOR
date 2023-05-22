@@ -81,7 +81,7 @@ def cycle_formulation(I):
         for node in c:
             expressions[node].append(bin_vars[i])
     for expression in expressions:
-        if expression:
+        if len(expression) > 1:
             m.addConstr(sum(expression) <= 1)
 
     ### solve model
@@ -101,6 +101,7 @@ def cycle_formulation(I):
     solution.gap = m.MIPGap # optimality gap
 
     ### determine chosen cycles (for ao feasibility check)
+    # ! TODO: find more efficient way for this: 
     solution.chosen_cycles = [C[i] for i in range(len(C)) if np.isclose(m.getVars()[i].x, 1.0)]
 
     ### solve relaxation

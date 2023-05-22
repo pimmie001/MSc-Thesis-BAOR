@@ -1,4 +1,4 @@
-from HCF.HCF_new import *
+from HCF.HCF import *
 from CYCLE.cycle_formulation import *
 import time
 
@@ -11,7 +11,7 @@ I = KEP_instance()
 I.build_instance(arcs, nodes, K)
 
 
-path = 'Instances/Kidney Data 00036/00036-00000118.wmd'
+path = 'Instances/Kidney Data 00036/00036-00000119.wmd'
 I = KEP_instance()
 I.build_KD36_instance(path, 4)
 

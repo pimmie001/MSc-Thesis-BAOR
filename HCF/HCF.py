@@ -96,26 +96,23 @@ def HCF(I):
 
     ### constraints (numbers refer to constraint number in HCF paper)
 
-    # constraint (5)
-    expressions = [ [] for _ in range(I.n) ]
-    expressions_half = [ [] for _ in range(I.n) ]
-    for i,h in enumerate(H):
+    # create expressions lists
+    expressions = [ [] for _ in range(I.n) ] # (5)
+    expressions_half = [ [] for _ in range(I.n) ] # (5)
+    left = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)] # (6)
+    right = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)] # (6)
+    constr_8 = I.K % 2 == 1 # (8) only needed if K odd
+    M = (I.K+3)/2 # (8)
+
+    for i,h in enumerate(H): # enumerating over H faster than looping over nodes
+        # constraint (5):
         for j,node in enumerate(h):
             if j == 0 or j == len(h)-1: # start/end node count for halves only
                 expressions_half[node].append(bin_vars[i])
             else:                       # middle nodes
                 expressions[node].append(bin_vars[i])
 
-    for k in range(I.n):
-        expression = expressions[k]
-        expression_half = expressions_half[k]
-        if 0.5*len(expression_half) + len(expression) > 1:
-            m.addConstr(0.5*sum(expression_half) + sum(expression) <= 1)
-
-    # constraint (6)
-    left = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)]
-    right = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)]
-    for i,h in enumerate(H):
+        # constraint (6):
         start = h[0]
         end = h[-1]
         if start < end: # add to 'left' list
@@ -123,19 +120,23 @@ def HCF(I):
         else:           # add to 'right' list (start and end are swapped)
             right[end][start-end-1].append(bin_vars[i])
 
-    for i in range(I.n-1):
+        # constraint (8):
+        if constr_8:
+            if len(h) == M and h[0] > h[-1]: # len(h) == M equivalent to |V^m(h)| == (K-1)/2
+                m.addConstr(bin_vars[i] == 0)
+
+    # add constraints to model
+    for i in range(I.n):
+        # constraint (5):
+        expression = expressions[i]
+        expression_half = expressions_half[i]
+        if 0.5*len(expression_half) + len(expression) > 1:
+            m.addConstr(0.5*sum(expression_half) + sum(expression) <= 1)
+
+        # constraint (6):
         for j in range(I.n-i-1):
             if left[i][j] or right[i][j]:
                 m.addConstr(sum(left[i][j]) == sum(right[i][j]))
-
-    # constraint (7): binary constraint already in variable definition
-
-    # constraint (8)
-    if I.K % 2 == 1: # only for odd K
-        M = (I.K+3)/2
-        for i,h in enumerate(H):
-            if len(h) == M and h[0] > h[-1]: # len(h) == M equivalent to |V^m(h)| == (K-1)/2
-                m.addConstr(bin_vars[i] == 0)
 
 
     ### solve model
