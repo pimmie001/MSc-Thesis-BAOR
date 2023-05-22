@@ -3,25 +3,24 @@ from CYCLE.cycle_formulation import *
 import time
 
 
-# nodes = ['A', 'B', 'C', 'D']
-# arcs = [('A','B'), ('B','D'), ('D','C'), ('C','A'), ('B','C'), ('C','B')]
-# K = 4
+nodes = ['A', 'B', 'C', 'D']
+arcs = [('A','B'), ('B','D'), ('D','C'), ('C','A'), ('B','C'), ('C','B')]
+K = 4
 
-# I = KEP_instance()
-# I.build_instance(arcs, nodes, K)
+I = KEP_instance()
+I.build_instance(arcs, nodes, K)
 
 
-path = 'Instances/Kidney Data 00036/00036-00000074.wmd'
+path = 'Instances/Kidney Data 00036/00036-00000118.wmd'
 I = KEP_instance()
 I.build_KD36_instance(path, 4)
 
 
-solution = cycle_formulation(I)
+st = time.time()
+solution = HCF(I)
 print()
 solution.show_summary()
-solution.check_feasibility()
-print(solution.feasibility)
-
+print(time.time()-st)
 
 
 # st = time.time()
