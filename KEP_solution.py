@@ -38,7 +38,7 @@ class KEP_solution:
                     return False
             if not self.I.adj_matrix[cycle[-1], cycle[0]]:
                 return False
-            
+
             # check if nodes not already in another cycle
             for node in cycle:
                 if node in all_nodes:
@@ -56,4 +56,4 @@ class KEP_solution:
 
 
     def print_feasibility(self):
-        print(self.feasible_check)
+        print(self.feasibility)
