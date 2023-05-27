@@ -12,13 +12,14 @@ from KEP_solution import *
 
 def get_half_cycles(I):
     """
-    given an instance I, generatate all half-cycles of size (1 + ceil(K/2)) or less
+    Given an instance I, generatates all half-cycles of size (1 + ceil(K/2)) or less
+    Uses symmetry reduction to reduce number of half cycles generated
     """
 
 
     ### create floyd matrix
     floyd = np.full((I.n, I.n), I.n) # initialize matrix
-    for i in I.adj_list: 
+    for i in I.adj_list:
         for j in I.adj_list[i]:
             floyd[i,j] = 1 # set direct neighbors distance to 1
 
@@ -52,6 +53,7 @@ def get_half_cycles(I):
                 for l in range(1, len(newC[k]) - 1):
                     if newC[k][l] < newC[k][0] and newC[k][l] < newC[k][-1]:
                         add = False
+                        break
                 if add and (I.K % 2 == 0 or j < (I.K+1)//2 or newC[k][0] < newC[k][-1]):
                     khcycles[newC[k][0]][newC[k][-1]][len(newC[k])-1].append(newC[k])
             curC = newC
@@ -141,7 +143,7 @@ def HCF(I):
 
     ### solve model
     m.write("model.lp")
-    # m.setParam('OutputFlag', False)
+    m.setParam('OutputFlag', False)
     m.optimize()
 
     ### show solution (progress)
@@ -154,7 +156,7 @@ def HCF(I):
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
 
-    # TODO: return solution for feasiblity check 
+    # TODO: return cycles for feasiblity check 
 
     ### solve relaxation
     m_relax = m.relax()
