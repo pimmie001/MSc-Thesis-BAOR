@@ -1,9 +1,20 @@
 import re
 import numpy as np
+import json
 
 
 class KEP_instance:
-    """Class instance for the KEP"""
+    """
+    Class instance for the KEP
+    Instance attributes:
+        K: maximum cycle length
+        n: number of nodes
+        m: number of arcs
+        adj_list: adjaceny list
+        adj_matrix: adjacency matrix
+        index: dictionary that constains indices of nodes (e.g. index['A'] = 0)
+        index_inv: inverse of the index dictionary (e.g. index_inv[0] = 'A'), used to retrieve the acutal names of the nodes
+    """
 
 
     def __init__(self):
@@ -21,37 +32,33 @@ class KEP_instance:
         # self.arcs = arcs
         self.n = len(nodes) # number of nodes
         self.m = len(arcs) # number of edges
-        # self.nodes = np.arange(self.n) # the indices of nodes # TODO: remove this?
         self.K = K
 
 
-        nodes_inv = {} # inverse of nodes. E.g. if nodes[i] = 'A' then nodes_inv[A] = i, important for ordering nodes
+        self.index = {}
+        self.index_inv = {}
         for i, node in enumerate(nodes):
-            nodes_inv[node] = i
+            self.index[node] = i
+            self.index_inv[i] = node
 
 
         # build adjacency list and matrix
-        self.adj_list = {}
-        for i in range(self.n):
-            self.adj_list[i] = []
-
+        self.adj_list = {i: [] for i in range(self.n)}
         self.adj_matrix = np.zeros((self.n,self.n), dtype=int)
 
         for v,w in arcs:
-            self.adj_list[nodes_inv[v]].append(nodes_inv[w])
-            self.adj_matrix[nodes_inv[v], nodes_inv[w]] = 1
+            self.adj_list[self.index[v]].append(self.index[w])
+            self.adj_matrix[self.index[v], self.index[w]] = 1
 
 
-    def build_KD36_instance(self, path, K=None, index=None):
+    def build_KD36_instance(self, path, K=None):
         """
         Build a 'KD 00036' instance given the path and optionally also sets K
-        Index specifies the order of the nodes (used for symmetry reduction)
         """
 
         if K:
             self.K = K
 
-        self.adj_list = {} # adjacency list
 
         with open(path) as fh:
             lines = re.split('\n', fh.read())
@@ -65,10 +72,11 @@ class KEP_instance:
 
             if 'NUMBER ALTERNATIVES' in line:
                 self.n = int(re.search(r'\d+', line).group())
-                self.nodes = np.arange(self.n)
-                self.adj_matrix = np.zeros((self.n,self.n), dtype=int) # adjacency matrix
-                for i in range(self.n):
-                    self.adj_list[i] = []
+                self.index = {i+1: i for i in range(self.n)}
+                self.index_inv = {i: i+1 for i in range(self.n)}
+
+                self.adj_matrix = np.zeros((self.n,self.n), dtype=int)
+                self.adj_list = {i: [] for i in range(self.n)}
 
             if 'NUMBER EDGES' in line:
                 self.m = int(re.search(r'\d+', line).group())
@@ -81,34 +89,83 @@ class KEP_instance:
             a, b = int(A[0])-1, int(A[1])-1 # -1 bc nodes start counting at 1
 
             self.adj_matrix[a, b] = 1 # add to adjacency matrix
-
             self.adj_list[a].append(b) # add to adjacency list
 
 
-    # ! needs testing
+    #TODO: test
+    def build_json_instance(self, path, K=None):
+        """Builds a json file instance, optionally also sets K"""
+
+        if K:
+            self.K = K
+
+
+        self.filename = re.search(r'([^\\/]+)$', path).group()
+
+        with open(path) as fh:
+            data = json.load(fh)['data']
+
+        self.n = len(data)
+
+        self.adj_matrix = np.zeros((self.n,self.n), dtype=int)
+        self.adj_list = {}
+
+        # make index and index_inv:
+        self.index = {}
+        self.index_inv = {}
+        i = 0
+        for key in data:
+            self.index[int(key)] = i
+            self.index_inv[i] = int(key)
+            i += 1
+
+        # make adj list and matrix: 
+        for key in data:
+            if 'matches' in data[key]:
+                neighbors = data[key]['matches']
+            else:
+                neighbors = []
+
+            u = self.index[int(key)]
+            self.adj_list[u] = []
+            for x in neighbors:
+                n = x['recipient']
+                v = self.index[n]
+
+                self.adj_matrix[u,v] = 1
+                self.adj_list[u].append(v)
+
+
+    #TODO: test
     def change_order(self, order):
         """
-        Updates adj_list and adj_matrix with new node order
+        Takes as input a list 'order' which contains the order of the new indices.
+        Will update adj_list, adj_matrix, index and index_inv according to this order
         """
 
-        # find nodes inverse
-        nodes_inv = {} # inverse of nodes. E.g. if nodes[i] = 'A' then nodes_inv[A] = i, important for ordering nodes
-        for i, node in enumerate(order):
-            nodes_inv[node] = i
+        order_inv = np.argsort(order)
 
-        # build adj list and matrix
-        adj_list = {}
-        for i in range(self.n):
-            adj_list[i] = []
-
+        index = {}
+        index_inv = {}
+        adj_list = {i: [] for i in range(self.n)}
         adj_matrix = np.zeros((self.n,self.n), dtype=int)
 
-        for v in range(self.n):
-            for w in self.adj_list[v]:
-                adj_list[nodes_inv[v]].append(nodes_inv[w])
-            adj_matrix[nodes_inv[v], nodes_inv[w]] = 1
 
-        # update adj list and matrix
+        for i in range(self.n):
+            # update index and index_inv
+            j = order[i]
+            index[self.index_inv[j]] = i
+            index_inv[i] = self.index_inv[j]
+
+            # update adj_list and matrix
+            for j in self.adj_list[i]:
+                adj_matrix[order_inv[i], order_inv[j]] = 1
+                adj_list[order_inv[i]].append(order_inv[j])
+
+
+        # update attributes
+        self.index = index
+        self.index_inv = index_inv
         self.adj_list = adj_list
         self.adj_matrix = adj_matrix
 
