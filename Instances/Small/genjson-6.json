@@ -1,0 +1,248 @@
+{
+  "data": {
+    "0": {
+      "sources": [
+        0
+      ],
+      "dage": 53,
+      "matches": [
+        {
+          "recipient": 5,
+          "score": 43
+        },
+        {
+          "recipient": 9,
+          "score": 12
+        },
+        {
+          "recipient": 11,
+          "score": 56
+        },
+        {
+          "recipient": 13,
+          "score": 10
+        }
+      ]
+    },
+    "1": {
+      "sources": [
+        1
+      ],
+      "dage": 68,
+      "matches": [
+        {
+          "recipient": 9,
+          "score": 44
+        },
+        {
+          "recipient": 11,
+          "score": 83
+        },
+        {
+          "recipient": 13,
+          "score": 25
+        }
+      ]
+    },
+    "2": {
+      "sources": [
+        2
+      ],
+      "dage": 37,
+      "matches": [
+        {
+          "recipient": 1,
+          "score": 37
+        },
+        {
+          "recipient": 5,
+          "score": 54
+        },
+        {
+          "recipient": 9,
+          "score": 67
+        },
+        {
+          "recipient": 11,
+          "score": 64
+        },
+        {
+          "recipient": 12,
+          "score": 76
+        }
+      ]
+    },
+    "4": {
+      "sources": [
+        4
+      ],
+      "dage": 50,
+      "matches": [
+        {
+          "recipient": 0,
+          "score": 40
+        },
+        {
+          "recipient": 1,
+          "score": 60
+        },
+        {
+          "recipient": 5,
+          "score": 45
+        },
+        {
+          "recipient": 8,
+          "score": 34
+        },
+        {
+          "recipient": 9,
+          "score": 81
+        },
+        {
+          "recipient": 11,
+          "score": 75
+        },
+        {
+          "recipient": 12,
+          "score": 36
+        },
+        {
+          "recipient": 13,
+          "score": 35
+        }
+      ]
+    },
+    "5": {
+      "sources": [
+        5
+      ],
+      "dage": 59,
+      "matches": [
+        {
+          "recipient": 9,
+          "score": 38
+        },
+        {
+          "recipient": 11,
+          "score": 60
+        }
+      ]
+    },
+    "8": {
+      "sources": [
+        8
+      ],
+      "dage": 22,
+      "matches": [
+        {
+          "recipient": 9,
+          "score": 28
+        },
+        {
+          "recipient": 11,
+          "score": 74
+        },
+        {
+          "recipient": 13,
+          "score": 65
+        }
+      ]
+    },
+    "9": {
+      "sources": [
+        9
+      ],
+      "dage": 68,
+      "matches": [
+        {
+          "recipient": 13,
+          "score": 56
+        }
+      ]
+    },
+    "11": {
+      "sources": [
+        11
+      ],
+      "dage": 47,
+      "matches": [
+        {
+          "recipient": 0,
+          "score": 41
+        },
+        {
+          "recipient": 1,
+          "score": 33
+        },
+        {
+          "recipient": 5,
+          "score": 69
+        },
+        {
+          "recipient": 9,
+          "score": 85
+        },
+        {
+          "recipient": 12,
+          "score": 63
+        },
+        {
+          "recipient": 13,
+          "score": 54
+        }
+      ]
+    },
+    "12": {
+      "sources": [
+        12
+      ],
+      "dage": 32,
+      "matches": [
+        {
+          "recipient": 5,
+          "score": 17
+        },
+        {
+          "recipient": 9,
+          "score": 73
+        },
+        {
+          "recipient": 11,
+          "score": 37
+        }
+      ]
+    },
+    "13": {
+      "sources": [
+        13
+      ],
+      "dage": 23,
+      "matches": [
+        {
+          "recipient": 0,
+          "score": 16
+        },
+        {
+          "recipient": 1,
+          "score": 61
+        },
+        {
+          "recipient": 8,
+          "score": 8
+        },
+        {
+          "recipient": 9,
+          "score": 37
+        },
+        {
+          "recipient": 11,
+          "score": 24
+        },
+        {
+          "recipient": 12,
+          "score": 45
+        }
+      ]
+    }
+  }
+}

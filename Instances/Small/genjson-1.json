@@ -1,0 +1,210 @@
+{
+  "data": {
+    "1": {
+      "sources": [
+        1
+      ],
+      "dage": 30,
+      "matches": [
+        {
+          "recipient": 3,
+          "score": 19
+        },
+        {
+          "recipient": 5,
+          "score": 6
+        },
+        {
+          "recipient": 6,
+          "score": 66
+        },
+        {
+          "recipient": 7,
+          "score": 73
+        },
+        {
+          "recipient": 9,
+          "score": 38
+        },
+        {
+          "recipient": 11,
+          "score": 37
+        },
+        {
+          "recipient": 12,
+          "score": 24
+        }
+      ]
+    },
+    "2": {
+      "sources": [
+        2
+      ],
+      "dage": 30,
+      "matches": [
+        {
+          "recipient": 3,
+          "score": 55
+        },
+        {
+          "recipient": 5,
+          "score": 76
+        },
+        {
+          "recipient": 6,
+          "score": 73
+        },
+        {
+          "recipient": 7,
+          "score": 87
+        },
+        {
+          "recipient": 9,
+          "score": 73
+        },
+        {
+          "recipient": 12,
+          "score": 9
+        }
+      ]
+    },
+    "3": {
+      "sources": [
+        3
+      ],
+      "dage": 60,
+      "matches": [
+        {
+          "recipient": 2,
+          "score": 86
+        },
+        {
+          "recipient": 4,
+          "score": 8
+        },
+        {
+          "recipient": 9,
+          "score": 62
+        },
+        {
+          "recipient": 11,
+          "score": 2
+        },
+        {
+          "recipient": 12,
+          "score": 1
+        }
+      ]
+    },
+    "4": {
+      "sources": [
+        4
+      ],
+      "dage": 32
+    },
+    "5": {
+      "sources": [
+        5
+      ],
+      "dage": 25,
+      "matches": [
+        {
+          "recipient": 2,
+          "score": 66
+        },
+        {
+          "recipient": 9,
+          "score": 45
+        },
+        {
+          "recipient": 11,
+          "score": 28
+        },
+        {
+          "recipient": 12,
+          "score": 86
+        }
+      ]
+    },
+    "6": {
+      "sources": [
+        6
+      ],
+      "dage": 30,
+      "matches": [
+        {
+          "recipient": 4,
+          "score": 71
+        },
+        {
+          "recipient": 9,
+          "score": 75
+        },
+        {
+          "recipient": 11,
+          "score": 35
+        },
+        {
+          "recipient": 12,
+          "score": 86
+        }
+      ]
+    },
+    "7": {
+      "sources": [
+        7
+      ],
+      "dage": 61,
+      "matches": [
+        {
+          "recipient": 9,
+          "score": 86
+        },
+        {
+          "recipient": 11,
+          "score": 53
+        },
+        {
+          "recipient": 12,
+          "score": 17
+        }
+      ]
+    },
+    "9": {
+      "sources": [
+        9
+      ],
+      "dage": 42
+    },
+    "11": {
+      "sources": [
+        11
+      ],
+      "dage": 21,
+      "matches": [
+        {
+          "recipient": 2,
+          "score": 69
+        },
+        {
+          "recipient": 4,
+          "score": 9
+        },
+        {
+          "recipient": 9,
+          "score": 73
+        },
+        {
+          "recipient": 12,
+          "score": 32
+        }
+      ]
+    },
+    "12": {
+      "sources": [
+        12
+      ],
+      "dage": 58
+    }
+  }
+}

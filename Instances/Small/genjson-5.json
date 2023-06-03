@@ -1,0 +1,136 @@
+{
+  "data": {
+    "1": {
+      "sources": [
+        1
+      ],
+      "dage": 48,
+      "matches": [
+        {
+          "recipient": 3,
+          "score": 82
+        },
+        {
+          "recipient": 10,
+          "score": 80
+        }
+      ]
+    },
+    "3": {
+      "sources": [
+        3
+      ],
+      "dage": 61,
+      "matches": [
+        {
+          "recipient": 1,
+          "score": 49
+        },
+        {
+          "recipient": 9,
+          "score": 70
+        }
+      ]
+    },
+    "4": {
+      "sources": [
+        4
+      ],
+      "dage": 45,
+      "matches": [
+        {
+          "recipient": 10,
+          "score": 82
+        }
+      ]
+    },
+    "6": {
+      "sources": [
+        6
+      ],
+      "dage": 58,
+      "matches": [
+        {
+          "recipient": 1,
+          "score": 19
+        },
+        {
+          "recipient": 9,
+          "score": 75
+        }
+      ]
+    },
+    "7": {
+      "sources": [
+        7
+      ],
+      "dage": 27
+    },
+    "9": {
+      "sources": [
+        9
+      ],
+      "dage": 68
+    },
+    "10": {
+      "sources": [
+        10
+      ],
+      "dage": 37,
+      "matches": [
+        {
+          "recipient": 1,
+          "score": 78
+        }
+      ]
+    },
+    "11": {
+      "sources": [
+        11
+      ],
+      "dage": 32,
+      "matches": [
+        {
+          "recipient": 3,
+          "score": 67
+        },
+        {
+          "recipient": 10,
+          "score": 76
+        }
+      ]
+    },
+    "14": {
+      "sources": [
+        14
+      ],
+      "dage": 60,
+      "matches": [
+        {
+          "recipient": 1,
+          "score": 0
+        },
+        {
+          "recipient": 9,
+          "score": 54
+        }
+      ]
+    },
+    "16": {
+      "sources": [
+        16
+      ],
+      "dage": 56,
+      "matches": [
+        {
+          "recipient": 1,
+          "score": 4
+        },
+        {
+          "recipient": 9,
+          "score": 34
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "data": {
+    "0": {
+      "sources": [
+        0
+      ],
+      "dage": 48,
+      "matches": [
+        {
+          "recipient": 19,
+          "score": 44
+        }
+      ]
+    },
+    "1": {
+      "sources": [
+        1
+      ],
+      "dage": 50,
+      "matches": [
+        {
+          "recipient": 5,
+          "score": 39
+        },
+        {
+          "recipient": 19,
+          "score": 23
+        }
+      ]
+    },
+    "5": {
+      "sources": [
+        5
+      ],
+      "dage": 58
+    },
+    "7": {
+      "sources": [
+        7
+      ],
+      "dage": 63,
+      "matches": [
+        {
+          "recipient": 1,
+          "score": 60
+        },
+        {
+          "recipient": 5,
+          "score": 6
+        },
+        {
+          "recipient": 19,
+          "score": 21
+        }
+      ]
+    },
+    "10": {
+      "sources": [
+        10
+      ],
+      "dage": 64,
+      "matches": [
+        {
+          "recipient": 5,
+          "score": 39
+        },
+        {
+          "recipient": 19,
+          "score": 38
+        }
+      ]
+    },
+    "16": {
+      "sources": [
+        16
+      ],
+      "dage": 44,
+      "matches": [
+        {
+          "recipient": 1,
+          "score": 61
+        },
+        {
+          "recipient": 5,
+          "score": 77
+        },
+        {
+          "recipient": 19,
+          "score": 43
+        }
+      ]
+    },
+    "17": {
+      "sources": [
+        17
+      ],
+      "dage": 50,
+      "matches": [
+        {
+          "recipient": 5,
+          "score": 39
+        },
+        {
+          "recipient": 19,
+          "score": 43
+        }
+      ]
+    },
+    "19": {
+      "sources": [
+        19
+      ],
+      "dage": 59
+    },
+    "21": {
+      "sources": [
+        21
+      ],
+      "dage": 53,
+      "matches": [
+        {
+          "recipient": 5,
+          "score": 35
+        },
+        {
+          "recipient": 19,
+          "score": 0
+        }
+      ]
+    },
+    "28": {
+      "sources": [
+        28
+      ],
+      "dage": 68,
+      "matches": [
+        {
+          "recipient": 0,
+          "score": 57
+        },
+        {
+          "recipient": 5,
+          "score": 86
+        },
+        {
+          "recipient": 7,
+          "score": 11
+        },
+        {
+          "recipient": 10,
+          "score": 4
+        },
+        {
+          "recipient": 16,
+          "score": 67
+        },
+        {
+          "recipient": 17,
+          "score": 42
+        }
+      ]
+    }
+  }
+}
