@@ -21,7 +21,7 @@ class KEP_solution:
             self.feasibility = self.check_feasibility_CF()
 
 
-    # TODO: compare time to all_nodes = [0,1,1,0,0,1]....
+    # ! UPDATE !!
     def check_feasibility_CF(self):
         """checks feasibility of the cycle formulation (CF) solution"""
 

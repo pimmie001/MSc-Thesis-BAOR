@@ -64,6 +64,7 @@ def cycle_formulation(I):
 
 
     C = get_cycles(I) # determine set of cycles
+    I.C = C
 
     ### create model
     m = gp.Model(f'KEP cycle formulation {I.filename}')
@@ -102,7 +103,8 @@ def cycle_formulation(I):
 
     ### determine chosen cycles (for ao feasibility check)
     # ! TODO: find more efficient way for this: 
-    solution.chosen_cycles = [C[i] for i in range(len(C)) if np.isclose(m.getVars()[i].x, 1.0)]
+    # solution.chosen_cycles = [C[i] for i in range(len(C)) if m.getVars()[i].x > 0.5]
+    solution.indices = [v.index for v in m.getVars() if v.x > 0.5]
 
     ### solve relaxation
     m_relax = m.relax()
