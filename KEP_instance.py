@@ -11,6 +11,7 @@ class KEP_instance:
         n: number of nodes
         m: number of arcs
         adj_list: adjaceny list
+        pred_list: predecessor list
         adj_matrix: adjacency matrix
         index: dictionary that constains indices of nodes (e.g. index['A'] = 0)
         index_inv: inverse of the index dictionary (e.g. index_inv[0] = 'A'), used to retrieve the acutal names of the nodes
@@ -168,4 +169,15 @@ class KEP_instance:
         self.index_inv = index_inv
         self.adj_list = adj_list
         self.adj_matrix = adj_matrix
+        if hasattr(self, "pred_list"):
+            self.make_pred_list()
+
+
+    def make_pred_list(self):
+        """Constructs predecessor list"""
+
+        self.pred_list = {i: [] for i in range(self.n)}
+        for i in range(self.n):
+            for neighbor in self.adj_list[i]:
+                self.pred_list[neighbor].append(i)
 
