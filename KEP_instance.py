@@ -14,7 +14,7 @@ class KEP_instance:
         pred_list: predecessor list
         adj_matrix: adjacency matrix
         index: dictionary that constains indices of nodes (e.g. index['A'] = 0)
-        index_inv: inverse of the index dictionary (e.g. index_inv[0] = 'A'), used to retrieve the acutal names of the nodes
+        index_inv: inverse of the index dictionary (e.g. index_inv[0] = 'A'), used to retrieve the actual names of the nodes
     """
 
 
