@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def degree(I, type = 'tot', descending = True):
+def degree(I, type = 'tot', descending = False):
     """
     Returns the order (ascending (default) or descending) of the degree of the nodes
     type:   tot --> total degree,   in --> incoming degree,   out --> outgoing degree
