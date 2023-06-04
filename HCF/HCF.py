@@ -1,7 +1,6 @@
 import numpy as np
 import gurobipy as gp
 from gurobipy import GRB
-gp.setParam('LogFile', 'gurobi_hcf.log')
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -86,6 +85,7 @@ def HCF(I):
 
     ### create model
     m = gp.Model('KEP half-cycle formulation')
+    gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
     m.ModelSense = GRB.MAXIMIZE
 
 

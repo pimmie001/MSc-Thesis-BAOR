@@ -1,7 +1,6 @@
 import numpy as np
 import gurobipy as gp
 from gurobipy import GRB
-gp.setParam('LogFile', 'gurobi.log')
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -68,6 +67,7 @@ def cycle_formulation(I):
 
     ### create model
     m = gp.Model(f'KEP cycle formulation {I.filename}')
+    gp.setParam('LogFile', 'Logfiles/gurobi_cf.log')
     m.ModelSense = GRB.MAXIMIZE
 
     ### variables
