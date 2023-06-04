@@ -31,12 +31,10 @@ def model(I):
 
     ##### Preparations
     C = get_cycles(I)
-    # C = [['A','B','C','D'],['A','B','C'], ['D','A','B','C']] #! test
 
     c2i = {} # (half)cycle to index to keep track of cycle indices
     H_full = [] # list with distinct halfcycles (used to retrieve actual cycle in solution)
     M = [] # list of dimensions len(c) * #hc_pairs * 2 that keeps track of indices of halfcycles; needed for the ILP formulation
-
 
     for cycle in C:
         M_sub = []
@@ -95,32 +93,31 @@ def model(I):
 
 
     ### constraints
-    # at least one HC pair is chosen for every cycle
-    count = 0
+    index = 0 # for (1)
+    i = 0 # for (2)
+
     for k in range(n_c):
         cycle = C[k]
+        num_pairs = len(M[k]) # number of hc pairs
 
-        # determine set X_k and keep track of count:
-        car_X_k = len(cycle)//2 if len(cycle)%2 == 0 else len(cycle) # cardinality of X_k: depends on length cycle and whether this length is odd or even
-        X_k = range(count, count + car_X_k) # set X_k
-        count += car_X_k
-        print(X_k)
+        # (1) at least one HC pair is chosen for every cycle:
+        m.addConstr(sum([vars_y[ii] for ii in range(index, index+num_pairs)]) >= 1)
+        index += num_pairs
 
-        LHS = []
-        for i in X_k:
-            LHS.append(vars_y[i])
-        m.addConstr(sum(LHS) >= 1)
-
-    # both halfcycle pairs (x) must be chosen if corresponding y is set to 1
-    i = 0
-    for k in range(n_c):
-        for l in range(len(M[k])):
+        # (2) both halfcycle pairs (x) must be chosen if corresponding y is set to 1:
+        for l in range(num_pairs):
             m.addConstr(vars_x[M[k][l][0]] + vars_x[M[k][l][1]] >= 2*vars_y[i])
             i += 1
 
 
-    ### solve model
+    ### solve model and show chosen half-cycles
     m.write("model choose hc.lp")
     # m.setParam('OutputFlag', False)
     m.optimize()
+
+    x_values = [x.X for x in vars_x]
+    indices = [j for j, value in enumerate(x_values) if value > 0.5]
+    print('\nThe chosen half-cycles are:\n')
+    for index in indices:
+        print(H_full[index])
 
