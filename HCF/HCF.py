@@ -152,6 +152,7 @@ def HCF(I):
     solution.runtime = m.Runtime
     solution.num_vars = m.NumVars
     solution.num_constrs = m.NumConstrs
+    solution.num_nonzero = m.NumNZs
     solution.LB = m.ObjVal # best lower bound (= objective value current solution)
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
