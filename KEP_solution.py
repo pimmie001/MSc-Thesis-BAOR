@@ -1,10 +1,10 @@
 class KEP_solution:
-    """class for solution for the KEP"""
+    """Class for solution for the KEP"""
 
 
     def __init__(self, I):
         self.I = I # solution should always correspond to an instance (I)
-        self.feasibility = None # is feasible checked?
+        self.feasibility = None # is feasible? (None = not checked)
 
 
     def show_summary(self):

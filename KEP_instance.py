@@ -137,7 +137,6 @@ class KEP_instance:
                 self.adj_list[u].append(v)
 
 
-    #TODO: test
     def change_order(self, order):
         """
         Takes as input a list 'order' which contains the order of the new indices.
