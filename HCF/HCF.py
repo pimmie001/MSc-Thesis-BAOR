@@ -76,12 +76,14 @@ def get_half_cycles(I):
 
 def HCF(I):
     """
-    given an instance I, solves the KEP using the half-cycle formulation
+    Given an instance I, solves the KEP using the half-cycle formulation
+    Constraint 8, together with symmetry reduction in the function 'get_half_cycles' 
+    prevent that cycles of size K+1 are created (only important when K is odd)
     """
 
 
     H = get_half_cycles(I) # determine set of half-cycles
-
+    I.H = H
 
     ### create model
     m = gp.Model('KEP half-cycle formulation')
@@ -148,6 +150,7 @@ def HCF(I):
 
     ### show solution (progress)
     solution = KEP_solution(I)
+    solution.formulation = 'HCF'
     solution.optimality = m.Status == GRB.OPTIMAL
     solution.runtime = m.Runtime
     solution.num_vars = m.NumVars
@@ -157,7 +160,8 @@ def HCF(I):
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
 
-    # TODO: return cycles for feasiblity check 
+    ### determine chosen half-cycles (for ao feasibility check)
+    solution.indices = [v.index for v in m.getVars() if v.x > 0.5] 
 
     ### solve relaxation
     m_relax = m.relax()

@@ -103,8 +103,6 @@ def cycle_formulation(I):
     solution.gap = m.MIPGap # optimality gap
 
     ### determine chosen cycles (for ao feasibility check)
-    # ! TODO: find more efficient way for this: 
-    # solution.chosen_cycles = [C[i] for i in range(len(C)) if m.getVars()[i].x > 0.5]
     solution.indices = [v.index for v in m.getVars() if v.x > 0.5]
 
     ### solve relaxation
