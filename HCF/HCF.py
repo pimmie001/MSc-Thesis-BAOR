@@ -83,7 +83,6 @@ def HCF(I):
 
 
     H = get_half_cycles(I) # determine set of half-cycles
-    I.H = H
 
     ### create model
     m = gp.Model('KEP half-cycle formulation')
@@ -161,6 +160,7 @@ def HCF(I):
     solution.gap = m.MIPGap # optimality gap
 
     ### determine chosen half-cycles (for ao feasibility check)
+    solution.H = H
     solution.indices = [v.index for v in m.getVars() if v.x > 0.5] 
 
     ### solve relaxation

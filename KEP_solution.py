@@ -31,7 +31,7 @@ class KEP_solution:
 
         total_obj = 0
         chosen_nodes = set()
-        chosen_cycles = [self.I.C[i] for i in self.indices]
+        chosen_cycles = [self.C[i] for i in self.indices]
         for cycle in chosen_cycles:
             # check cycles not larger than K
             if len(cycle) > self.I.K: 
@@ -65,7 +65,7 @@ class KEP_solution:
 
         total_obj = 0
         chosen_nodes = set()
-        chosen_hcycles = [self.I.H[i] for i in self.indices]
+        chosen_hcycles = [self.H[i] for i in self.indices]
         counterparts = {} # to match half-cycles with each other
         for i, hcycle in enumerate(chosen_hcycles):
             # match half-cycle pairs:

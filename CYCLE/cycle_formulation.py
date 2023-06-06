@@ -63,7 +63,6 @@ def cycle_formulation(I):
 
 
     C = get_cycles(I) # determine set of cycles
-    I.C = C
 
     ### create model
     m = gp.Model(f'KEP cycle formulation {I.filename}')
@@ -103,6 +102,7 @@ def cycle_formulation(I):
     solution.gap = m.MIPGap # optimality gap
 
     ### determine chosen cycles (for ao feasibility check)
+    solution.C = C
     solution.indices = [v.index for v in m.getVars() if v.x > 0.5]
 
     ### solve relaxation
