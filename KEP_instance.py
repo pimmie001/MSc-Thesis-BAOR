@@ -1,6 +1,7 @@
 import re
 import numpy as np
 import json
+import networkx as nx
 
 
 class KEP_instance:
@@ -30,7 +31,6 @@ class KEP_instance:
         """"build self made instance"""
 
         self.filename = "self-made example"
-        # self.arcs = arcs
         self.n = len(nodes) # number of nodes
         self.m = len(arcs) # number of edges
         self.K = K
@@ -180,3 +180,14 @@ class KEP_instance:
             for neighbor in self.adj_list[i]:
                 self.pred_list[neighbor].append(i)
 
+
+    def build_graph(self):
+        nodes = list(range(self.n))
+        arcs = []
+        for i in range(self.n):
+            for j in self.adj_list[i]:
+                arcs.append((i,j))
+
+        self.G = nx.DiGraph()
+        self.G.add_nodes_from(nodes)
+        self.G.add_edges_from(arcs)
