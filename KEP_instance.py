@@ -172,6 +172,42 @@ class KEP_instance:
             self.make_pred_list()
 
 
+    def sort(self, measure, direction, change=False):
+        """
+        Sorts measure based on direction (asc, desc, mid high, mid low)
+        If change, will also change the order based on this order
+        """
+
+        A = np.argsort(measure)
+
+        if direction == 'asc':
+            order = A
+
+        elif direction == 'desc':
+            order = A[::-1]
+
+        elif direction == 'mid high':
+            order = [None for _ in range(self.n)]
+            for i in range(self.n):
+                if i % 2 == 0:
+                    order[i//2] = A[i]
+                else:
+                    order[-((i+1)//2)] = A[i]
+
+        elif direction == 'mid low':
+            order = [None for _ in range(self.n)]
+            for i in range(self.n):
+                if i % 2 == 0:
+                    order[i//2] = A[-(i+1)]
+                else:
+                    order[-((i+1)//2)] = A[-(i+1)]
+
+        if change:
+            self.change_order(order)
+
+        return order
+
+
     def make_pred_list(self):
         """Constructs predecessor list"""
 
