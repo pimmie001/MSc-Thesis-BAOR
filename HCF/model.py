@@ -1,14 +1,14 @@
-### Model to find min # of half-cycles
-# TODO: test for small example
+import gurobipy as gp
+from gurobipy import GRB
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from CYCLE.cycle_formulation import *
+from CYCLE.cycle_formulation import get_cycles
 
 
 def get_index_HC(hc, c2i, H_full):
     """
-    First checks if hc has been created before. If so it will return its index and if not it will add the hc to the list i2c
+    First checks if hc has been created before. If not it will add the hc to the list i2c
     Secondly returns the index of the hc
     """
 
@@ -21,11 +21,14 @@ def get_index_HC(hc, c2i, H_full):
     return index
 
 
-def model(I):
+def model(I): # TODO: change name
     """
     ILP model to determine the minimum amount of half cycles needed to cover for all cycles
     First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
     Secondly solves the ILP model
+
+    For odd K, model requires a different ILP model than 'HCF.py' because there is no symmetry reduction to determine H
+    and therefore it is possible that cycles of size (K+1) are created
     """
 
 
