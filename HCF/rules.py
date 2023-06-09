@@ -37,6 +37,19 @@ def degree(I, Type = 'tot', descending = False):
     return order[::-1] if descending else order
 
 
+def betweenness_centrality(I):
+    """The betweenness centrality of a node is the amount of times the node lies on a shortest path between other nodes"""
+
+    floyd = make_floyd(I)
+    betweenness = np.zeros(I.n)
+    for i in range(I.n):
+        for j in range(I.n):
+            for k in range(j+1, I.n):
+                pass
+                # betweenness[i] += floyd[i,k] < floyd[j,k] # ! NOT correct!!!
+    return betweenness
+
+
 def closeness_centrality(I):
     """The closeness centrality of a node is the sum of the distance to every other node (distance = n if not possible)"""
 
