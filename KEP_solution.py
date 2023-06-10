@@ -1,5 +1,10 @@
 class KEP_solution:
-    """Class for solution for the KEP"""
+    """
+    Class for solution for the KEP
+        Stores solution properties such as lower/upper bound. Also includes 
+        properties of the corresponding ILP model such as number of variables)
+        Can check the feasibility of a solution found by the CF or HCF
+    """
 
 
     def __init__(self, I):
@@ -17,9 +22,6 @@ class KEP_solution:
 
 
     def check_feasibility(self):
-        if not self.optimality:
-            return None
-
         if self.formulation == 'CF':
             self.feasibility = self.check_feasibility_CF()
         elif self.formulation == 'HCF':

@@ -21,6 +21,7 @@ def degree(I, Type = 'tot'):
 
 
 def closeness_centrality(I):
+    """The closeness centrality of a node is the sum of the distance to every other node (distance = n if not possible)"""
     I.build_graph()
     closeness = nx.closeness_centrality(I.G)
     return [closeness[i] for i in range(I.n)]
