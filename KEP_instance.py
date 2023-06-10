@@ -28,7 +28,7 @@ class KEP_instance:
 
 
     def build_instance(self, arcs, nodes, K):
-        """"build self made instance"""
+        """"Builds a self-made instance"""
 
         self.filename = "self-made example"
         self.n = len(nodes) # number of nodes
@@ -53,9 +53,7 @@ class KEP_instance:
 
 
     def build_KD36_instance(self, path, K=None):
-        """
-        Build a 'KD 00036' instance given the path and optionally also sets K
-        """
+        """Builds a 'KD 00036' instance given the path and optionally also sets K"""
 
         if K:
             self.K = K
@@ -93,7 +91,6 @@ class KEP_instance:
             self.adj_list[a].append(b) # add to adjacency list
 
 
-    #TODO: test
     def build_json_instance(self, path, K=None):
         """Builds a json file instance, optionally also sets K"""
 
@@ -218,6 +215,8 @@ class KEP_instance:
 
 
     def build_graph(self):
+        """Builds a networkx graph of the instance (for example used to calculate closeness/centrality degree)"""
+
         nodes = list(range(self.n))
         arcs = []
         for i in range(self.n):
