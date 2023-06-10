@@ -169,21 +169,21 @@ class KEP_instance:
             self.make_pred_list()
 
 
-    def sort(self, measure, direction, change=False):
+    def sort(self, measure, rule, change=False):
         """
-        Sorts measure based on direction (asc, desc, mid high, mid low)
+        Sorts measure based on rule (asc, desc, mid high, mid low)
         If change, will also change the order based on this order
         """
 
         A = np.argsort(measure)
 
-        if direction == 'asc':
+        if rule == 'asc': # ascending
             order = A
 
-        elif direction == 'desc':
+        elif rule == 'desc': # descending
             order = A[::-1]
 
-        elif direction == 'mid high':
+        elif rule == 'mid high': # higher values in the middle (e.g. [0,2,4,5,3,1])
             order = [None for _ in range(self.n)]
             for i in range(self.n):
                 if i % 2 == 0:
@@ -191,7 +191,7 @@ class KEP_instance:
                 else:
                     order[-((i+1)//2)] = A[i]
 
-        elif direction == 'mid low':
+        elif rule == 'mid low': # lower values in the middle (e.g. [5,3,1,0,2,4])
             order = [None for _ in range(self.n)]
             for i in range(self.n):
                 if i % 2 == 0:
