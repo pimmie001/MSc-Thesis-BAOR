@@ -2,9 +2,9 @@ import numpy as np
 import networkx as nx
 
 
-def degree(I, Type = 'tot', descending = False):
+def degree(I, Type = 'tot'):
     """
-    Returns the order (ascending (default) or descending) of the degree of the nodes
+    Returns the degree of the nodes
     Type:   tot --> total degree,   in --> incoming degree,   out --> outgoing degree
     """
 
@@ -23,35 +23,7 @@ def degree(I, Type = 'tot', descending = False):
 
 
 
-def floyd_matrix(I):
-    # returns floyd matrix
-
-    floyd = np.full((I.n, I.n), I.n) # initialize matrix
-    for i in I.adj_list: 
-        for j in I.adj_list[i]:
-            floyd[i,j] = 1 # set direct neighbors distance to 1
-
-    for i in range(I.n):
-        for j in range(I.n):
-            for k in range(I.n):
-                floyd[j,k] = min(floyd[j,k], floyd[j,i] + floyd[i,k])
-
-    return floyd
-
-
 def closeness_centrality(I):
-    """The closeness centrality of a node is the sum of the distance to every other node (distance = n if not possible)"""
-
-    floyd = floyd_matrix(I)
-    closeness = np.zeros(I.n, dtype=int)
-    for i in range(I.n):
-        for j in range(I.n):
-            if i != j:
-                closeness[i] += floyd[i,j]
-    return closeness
-
-
-def closeness_centrality2(I):
     I.build_graph()
     closeness = nx.closeness_centrality(I.G)
     return [closeness[i] for i in range(I.n)]
@@ -67,6 +39,35 @@ def betweenness_centrality(I):
 
 
 ###### OLD CODE: 
+
+
+# def floyd_matrix(I):
+#     # returns floyd matrix
+
+#     floyd = np.full((I.n, I.n), I.n) # initialize matrix
+#     for i in I.adj_list: 
+#         for j in I.adj_list[i]:
+#             floyd[i,j] = 1 # set direct neighbors distance to 1
+
+#     for i in range(I.n):
+#         for j in range(I.n):
+#             for k in range(I.n):
+#                 floyd[j,k] = min(floyd[j,k], floyd[j,i] + floyd[i,k])
+
+#     return floyd
+
+
+# def closeness_centrality(I):
+#     """The closeness centrality of a node is the sum of the distance to every other node (distance = n if not possible)"""
+
+#     floyd = floyd_matrix(I)
+#     closeness = np.zeros(I.n, dtype=int)
+#     for i in range(I.n):
+#         for j in range(I.n):
+#             if i != j:
+#                 closeness[i] += floyd[i,j]
+#     return closeness
+
 
 
 # def floyd_with_pred(I):
