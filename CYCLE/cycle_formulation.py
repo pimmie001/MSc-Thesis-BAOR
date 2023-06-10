@@ -86,7 +86,7 @@ def cycle_formulation(I):
 
     ### solve model
     # m.write("model.lp")
-    m.setParam('OutputFlag', False)
+    # m.setParam('OutputFlag', False)
     m.optimize()
 
     ### make solution class

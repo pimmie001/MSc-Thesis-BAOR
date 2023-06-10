@@ -143,11 +143,11 @@ def HCF(I):
 
 
     ### solve model
-    m.write("model.lp")
-    m.setParam('OutputFlag', False)
+    # m.write("model.lp")
+    # m.setParam('OutputFlag', False)
     m.optimize()
 
-    ### show solution (progress)
+    ### make solution class
     solution = KEP_solution(I)
     solution.formulation = 'HCF'
     solution.optimality = m.Status == GRB.OPTIMAL

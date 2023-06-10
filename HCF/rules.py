@@ -34,3 +34,33 @@ def betweenness_centrality(I):
     betweenness = nx.betweenness_centrality(I.G, normalized=False)
     return [betweenness[i] for i in range(I.n)]
 
+
+
+def beta_power_measure(I): # ! CHECK?
+    # ...
+
+    I.build_graph()
+    graph = I.G
+
+    beta_power = {}
+    for node in graph.nodes:
+        neighbors = list(graph.neighbors(node))
+        node_degree = graph.degree(node)
+        neighbor_sum = sum(graph.degree(neighbor) for neighbor in neighbors)
+        
+        if node_degree + neighbor_sum != 0:
+            beta_power[node] = neighbor_sum / (node_degree + neighbor_sum)
+        else:
+            beta_power[node] = 0.0
+    print(beta_power)
+    return beta_power
+
+
+# TODO: 
+def eigenvector_centrality(I): pass
+
+def katz_centrality(I):pass
+
+def clustering_coefficient():pass
+
+def Node_Connectivity():pass
