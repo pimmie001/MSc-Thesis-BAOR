@@ -8,7 +8,7 @@ from CYCLE.cycle_formulation import get_cycles
 
 def get_index_HC(hc, c2i, H_full):
     """
-    First checks if hc has been created before. If not it will add the hc to the list i2c
+    First checks if hc has been created before. If not it will add the hc to the c2i (dict) and H_full (list)
     Secondly returns the index of the hc
     """
 
@@ -27,8 +27,8 @@ def model(I): # TODO: change name
     First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
     Secondly solves the ILP model
 
-    For odd K, model requires a different ILP model than 'HCF.py' because there is no symmetry reduction to determine H
-    and therefore it is possible that cycles of size (K+1) are created
+    For odd K, model requires a different ILP model than 'HCF.py' because there is no symmetry reduction to determine 
+    the set of half-cycles and therefore it is possible that cycles of size (K+1) are created
     """
 
 
@@ -124,3 +124,5 @@ def model(I): # TODO: change name
     for index in indices:
         print(H_full[index])
 
+
+# TODO!: solve KEP with chosen half cycles - extra constraints for odd K are needed !! 
