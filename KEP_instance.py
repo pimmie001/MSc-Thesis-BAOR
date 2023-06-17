@@ -27,13 +27,13 @@ class KEP_instance:
         self.K = K
 
 
-    def build_instance(self, arcs, nodes, K):
+    def build_instance(self, arcs, nodes, K=None):
         """"Builds a self-made instance"""
 
         self.filename = "self-made example"
         self.n = len(nodes) # number of nodes
         self.m = len(arcs) # number of edges
-        self.K = K
+        if K: self.K = K
 
 
         self.index = {}
