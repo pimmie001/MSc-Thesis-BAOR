@@ -135,8 +135,9 @@ def min_hc(I):
 
 
     ### solve model and show chosen half-cycles
-    m.write("model choose hc.lp")
-    # m.setParam('OutputFlag', False)
+    # m.write("model choose hc.lp")
+    m.setParam('OutputFlag', False)
+    m.setParam('TimeLimit', 600)
     m.optimize()
 
 
