@@ -10,10 +10,11 @@ from KEP_solution import *
 from model import *
 
 
-def HCF2(I):
+def HCF2(I): #! make so that input is chosen halfcylces (need not be minimum if e.g. heuristic is used)
     """
-    Given instance I, will find minimum number of halfcycles using model.model.
-    Then solves the HCF using this ILP formulation
-    TODO: need (a set of) constraint(s) to make sure no halfcycles of size (K+1) are created if K is odd
+    Input: instance I, chosen halfcycles 
+    Will solve the KEP using the chosen halfcycles
+    ! TODO: need a (set of) constraint(s) to make sure no halfcycles of size (K+1) are created if K is odd
+    ! if K is even, not needed
     """
     pass

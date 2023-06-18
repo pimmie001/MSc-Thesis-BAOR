@@ -6,6 +6,14 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from CYCLE.cycle_formulation import get_cycles
 
 
+class min_hc_solution:
+    """TODO"""
+
+    def __init__(self, I):
+        self.I = I # corresponding instance
+
+
+
 def get_index_HC(hc, c2i, H_full):
     """
     First checks if hc has been created before. If not it will add the hc to the c2i (dict) and H_full (list)
@@ -42,7 +50,7 @@ def model(I): # TODO: change name
     for cycle in C:
         M_sub = []
 
-        if len(cycle) % 2 == 0:
+        if len(cycle) % 2 == 0: # even
             for i in range(len(cycle)//2):
                 # make half cycles:
                 hc1 = ()
@@ -54,7 +62,7 @@ def model(I): # TODO: change name
                 # store half_cycles and index:
                 M_sub.append((get_index_HC(hc1, c2i, H_full), get_index_HC(hc2, c2i, H_full)))
 
-        else:
+        else: # odd
             for i in range(len(cycle)):
                 # make half cycles:
                 hc1 = ()
@@ -108,8 +116,14 @@ def model(I): # TODO: change name
         index += num_pairs
 
         # (2) both halfcycle pairs (x) must be chosen if corresponding y is set to 1:
-        for l in range(num_pairs):
-            m.addConstr(vars_x[M[k][l][0]] + vars_x[M[k][l][1]] >= 2*vars_y[i])
+        for l in range(num_pairs): # choice combine or split constraints
+            # # combine constraints
+            # m.addConstr(vars_x[M[k][l][0]] + vars_x[M[k][l][1]] >= 2*vars_y[i])
+        
+            # split constraints (faster)
+            m.addConstr(vars_x[M[k][l][0]] >= vars_y[i])
+            m.addConstr(vars_x[M[k][l][1]] >= vars_y[i])
+
             i += 1
 
 
@@ -118,11 +132,24 @@ def model(I): # TODO: change name
     # m.setParam('OutputFlag', False)
     m.optimize()
 
+
+    ### return solution
+    solution = min_hc_solution(I)
+
     x_values = [x.X for x in vars_x]
-    indices = [j for j, value in enumerate(x_values) if value > 0.5]
-    print('\nThe chosen half-cycles are:\n')
-    for index in indices:
-        print(H_full[index])
+    indices = [j for j, value in enumerate(x_values) if value > 0.5] # the indices of the chosen halfcycles
 
+    # info on chosen halfcycles
+    solution.xindices = indices
+    solution.H_full = H_full
+    solution.c2i = c2i
 
-# TODO!: solve KEP with chosen half cycles - extra constraints for odd K are needed !! 
+    # info on runtime/number vars etc. 
+    solution.optimality = m.Status == GRB.OPTIMAL
+    solution.runtime = m.Runtime
+    solution.num_vars = m.NumVars
+    solution.num_constrs = m.NumConstrs
+    solution.num_nonzero = m.NumNZs
+
+    return solution
+
