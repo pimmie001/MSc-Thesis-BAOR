@@ -29,15 +29,13 @@ def get_index_HC(hc, c2i, H_full):
     return index
 
 
-def min_hc(I):
+def determine_requirements(I):
     """
-    ILP model to determine the minimum amount of half cycles needed to cover for all cycles
-    First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
-    Secondly solves the ILP model and returns the minimum number of half-cycles that are needed to create each feasible cycle
+    Determines c2i, H_full and M
+    M contains information on the requirements of the half-cycles (such that every cycle can be reconstructed),
+    H_full is the set of all created half-cycles and c2i is the cycle-to-index dictionary
     """
 
-
-    ##### Preparations
     C = get_cycles(I)
 
     c2i = {} # (half)cycle to index to keep track of cycle indices
@@ -75,6 +73,19 @@ def min_hc(I):
 
         M.append(M_sub)
 
+    return M, c2i, H_full
+
+
+def min_hc(I):
+    """
+    ILP model to determine the minimum amount of half cycles needed to cover for all cycles
+    First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
+    Secondly solves the ILP model and returns the minimum number (and the indice) of half-cycles
+    """
+
+
+    ##### Preparations
+    M, c2i, H_full = determine_requirements(I)
 
 
     ##### The ILP model
@@ -82,7 +93,7 @@ def min_hc(I):
     gp.setParam('LogFile', 'Logfiles/gurobi_choose_hc.log')
 
 
-    n_c = len(C) # number of cycles
+    n_c = len(M) # number of cycles
     n_h = len(H_full) # number of halfcycles
     n_p = sum([len(M[i]) for i in range(len(M))]) # number of HC pairs
 
@@ -105,7 +116,6 @@ def min_hc(I):
     i = 0 # for (2)
 
     for k in range(n_c):
-        cycle = C[k]
         num_pairs = len(M[k]) # number of hc pairs
 
         # (1) at least one HC pair is chosen for every cycle:
