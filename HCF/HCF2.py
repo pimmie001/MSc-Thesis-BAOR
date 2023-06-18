@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from KEP_instance import *
 from KEP_solution import *
 
-from model import *
+from min_hc import *
 
 
 def HCF2(I): #! make so that input is chosen halfcylces (need not be minimum if e.g. heuristic is used)

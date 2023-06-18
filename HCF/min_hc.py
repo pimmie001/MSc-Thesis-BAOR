@@ -29,14 +29,11 @@ def get_index_HC(hc, c2i, H_full):
     return index
 
 
-def model(I): # TODO: change name
+def min_hc(I):
     """
     ILP model to determine the minimum amount of half cycles needed to cover for all cycles
     First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
-    Secondly solves the ILP model
-
-    For odd K, model requires a different ILP model than 'HCF.py' because there is no symmetry reduction to determine 
-    the set of half-cycles and therefore it is possible that cycles of size (K+1) are created
+    Secondly solves the ILP model and returns the minimum number of half-cycles that are needed to create each feasible cycle
     """
 
 
@@ -119,7 +116,7 @@ def model(I): # TODO: change name
         for l in range(num_pairs): # choice combine or split constraints
             # # combine constraints
             # m.addConstr(vars_x[M[k][l][0]] + vars_x[M[k][l][1]] >= 2*vars_y[i])
-        
+
             # split constraints (faster)
             m.addConstr(vars_x[M[k][l][0]] >= vars_y[i])
             m.addConstr(vars_x[M[k][l][1]] >= vars_y[i])
