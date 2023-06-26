@@ -85,7 +85,7 @@ def HCF(I):
     H = get_half_cycles(I) # determine set of half-cycles
 
     ### create model
-    m = gp.Model('KEP half-cycle formulation')
+    m = gp.Model('KEP HCF')
     gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
     m.ModelSense = GRB.MAXIMIZE
 
@@ -100,12 +100,12 @@ def HCF(I):
     ### constraints (numbers refer to constraint number in HCF paper)
 
     # create expressions lists
-    expressions = [ [] for _ in range(I.n) ] # (5)
-    expressions_half = [ [] for _ in range(I.n) ] # (5)
-    left = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)] # (6)
-    right = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)] # (6)
-    constr_8 = I.K % 2 == 1 # (8) only needed if K odd
-    M = (I.K+3)/2 # (8)
+    expressions_half = [ [] for _ in range(I.n) ]   # (5)
+    expressions = [ [] for _ in range(I.n) ]        # (5)
+    left = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)]     # (6)
+    right = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)]    # (6)
+    constr_8 = I.K % 2 == 1 # (8) (only needed if K odd)
+    M = (I.K+3)/2           # (8)
 
     for i,h in enumerate(H): # enumerating over H faster than looping over nodes
         # constraint (5):
@@ -143,7 +143,7 @@ def HCF(I):
 
 
     ### solve model
-    # m.write("model.lp")
+    # m.write("HCF.lp")
     # m.setParam('OutputFlag', False)
     m.optimize()
 
