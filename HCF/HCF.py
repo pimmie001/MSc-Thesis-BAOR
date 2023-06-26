@@ -104,7 +104,7 @@ def HCF(I):
     expressions = [ [] for _ in range(I.n) ]        # (5)
     left = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)]     # (6)
     right = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)]    # (6)
-    constr_8 = I.K % 2 == 1 # (8) (only needed if K odd)
+    odd_K = I.K % 2 == 1 # (8) (only needed if K odd)
     M = (I.K+3)/2           # (8)
 
     for i,h in enumerate(H): # enumerating over H faster than looping over nodes
@@ -124,7 +124,7 @@ def HCF(I):
             right[end][start-end-1].append(bin_vars[i])
 
         # constraint (8):
-        if constr_8:
+        if odd_K:
             if len(h) == M and h[0] > h[-1]: # len(h) == M equivalent to |V^m(h)| == (K-1)/2
                 m.addConstr(bin_vars[i] == 0)
 
