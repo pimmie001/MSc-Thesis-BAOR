@@ -7,7 +7,7 @@ from CYCLE.cycle_formulation import get_cycles
 
 
 class min_hc_solution:
-    """TODO"""
+    """Simple class for min_hc solution"""
 
     def __init__(self, I):
         self.I = I # corresponding instance
@@ -76,7 +76,8 @@ def determine_requirements(I):
     return M, c2i, H_full
 
 
-def min_hc(I):
+
+def min_hc(I, time_limit=600):
     """
     ILP model to determine the minimum amount of half cycles needed to cover for all cycles
     First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
@@ -112,8 +113,8 @@ def min_hc(I):
 
 
     ### constraints
-    index = 0 # for (1)
-    i = 0 # for (2)
+    index = 0   # for (1)
+    i = 0       # for (2)
 
     for k in range(n_c):
         num_pairs = len(M[k]) # number of hc pairs
@@ -123,11 +124,8 @@ def min_hc(I):
         index += num_pairs
 
         # (2) both halfcycle pairs (x) must be chosen if corresponding y is set to 1:
-        for l in range(num_pairs): # choice combine or split constraints
-            # # combine constraints
-            # m.addConstr(vars_x[M[k][l][0]] + vars_x[M[k][l][1]] >= 2*vars_y[i])
-
-            # split constraints (faster)
+        for l in range(num_pairs):
+            # split constraints into two
             m.addConstr(vars_x[M[k][l][0]] >= vars_y[i])
             m.addConstr(vars_x[M[k][l][1]] >= vars_y[i])
 
@@ -135,9 +133,9 @@ def min_hc(I):
 
 
     ### solve model and show chosen half-cycles
-    # m.write("model choose hc.lp")
+    # m.write("min_hc.lp")
     m.setParam('OutputFlag', False)
-    m.setParam('TimeLimit', 600)
+    m.setParam('TimeLimit', time_limit)
     m.optimize()
 
 
@@ -154,6 +152,7 @@ def min_hc(I):
 
     # info on runtime/number vars etc. 
     solution.optimality = m.Status == GRB.OPTIMAL
+    solution.obj = m.objVal
     solution.runtime = m.Runtime
     solution.num_vars = m.NumVars
     solution.num_constrs = m.NumConstrs
