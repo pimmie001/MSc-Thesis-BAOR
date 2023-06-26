@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from CYCLE.cycle_formulation import get_cycles
 
 
-class min_hc_solution:
+class choose_hc_solution:
     """Simple class for min_hc solution"""
 
     def __init__(self, I):
@@ -140,17 +140,18 @@ def min_hc(I, time_limit=600):
 
 
     ### return solution
-    solution = min_hc_solution(I)
+    solution = choose_hc_solution(I)
 
     x_values = [x.X for x in vars_x]
     indices = [j for j, value in enumerate(x_values) if value > 0.5] # the indices of the chosen halfcycles
 
     # info on chosen halfcycles
-    solution.xindices = indices
+    solution.indices = indices
     solution.H_full = H_full
     solution.c2i = c2i
 
-    # info on runtime/number vars etc. 
+    # info on runtime/number vars etc.
+    solution.name = 'ILP model'
     solution.optimality = m.Status == GRB.OPTIMAL
     solution.obj = m.objVal
     solution.runtime = m.Runtime
