@@ -5,7 +5,6 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from KEP_instance import *
 from KEP_solution import *
-from min_hc import *
 
 
 # ! todo: TEST
@@ -78,6 +77,8 @@ def HCF2(solution_hc):
 
     ## constraint for odd K
     if I.K % 2 == 1:
+        raise ValueError('K is odd')
+        print('test')
         indices_K = [i for i in range(len(H_full)) if len(H_full[i]) == I.K]
         for i in range(len(indices_K)):
             for j in range(i+1, len(indices_K)):
@@ -85,13 +86,13 @@ def HCF2(solution_hc):
 
 
     ### solve model
-    # m.write("HCF 2.lp")
+    # m.write("HCF2.lp")
     # m.setParam('OutputFlag', False)
     m.optimize()
 
     ### make solution class
     solution = KEP_solution(I)
-    solution.formulation = 'HCF 2'
+    solution.formulation = 'HCF2'
     solution.optimality = m.Status == GRB.OPTIMAL
     solution.runtime = m.Runtime
     solution.num_vars = m.NumVars
