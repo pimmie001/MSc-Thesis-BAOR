@@ -61,7 +61,11 @@ def check(M, indices, completed_cycles):
 
 
 def heuristic(I):
-    """Heuristic solution to find minimum number of halfcycles to select for ILP model"""
+    """
+    Heuristic solution to find minimum number of halfcycles to select for ILP model.
+    First adds most common half-cycle to chosen half-cycles, then looks if a half-cycle pair 
+    can be made by only adding one extra half-cycle
+    """
 
 
     ## preparations

@@ -77,7 +77,7 @@ def determine_requirements(I):
 
 
 
-def min_hc(I, time_limit=600):
+def min_hc(I, time_limit=None):
     """
     ILP model to determine the minimum amount of half cycles needed to cover for all cycles
     First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
@@ -87,6 +87,8 @@ def min_hc(I, time_limit=600):
 
     ##### Preparations
     M, c2i, H_full = determine_requirements(I)
+    if time_limit is None:
+        time_limit = 600
 
 
     ##### The ILP model
