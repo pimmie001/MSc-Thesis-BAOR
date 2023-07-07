@@ -1,11 +1,16 @@
 import numpy as np
 import gurobipy as gp
 from gurobipy import GRB
+import time
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from KEP_instance import *
 from KEP_solution import *
+from HCF.min_hc import *
+from HCF.min_hc_heuristics import *
+
 
 
 
@@ -74,17 +79,41 @@ def get_half_cycles(I):
 
 
 
-def HCF(I):
+def HCF(I, method = "enumerate"):
     """
-    Given an instance I, solves the KEP using the half-cycle formulation
-    Constraint 8, together with symmetry reduction in the function 'get_half_cycles' 
-    prevent that cycles of size K+1 are created (only important when K is odd)
+    Given instance I, solves the KEP using the HCF
+    method:
+        enumerate: enumerates all half-cycles based on the node order
+        min: will find the minimum number of half-cycles to complete each cycle
+        heuristic: will find a heuristic solution for the minimum number of half-cycles to complete each cycle
+    
+    Returns a solution containing information such as runtime (including time for preparations), number of variables etc. 
+    ! When K is odd, uses extra constraints to prevent two half-cycles forming a cycle of length K+1
     """
 
+    ### Determine H (= set of half cycles)
+    start_find_H = time.time()
 
-    H = get_half_cycles(I) # determine set of half-cycles
+    if method == "enumerate":
+        H = get_half_cycles(I)
+        ordered_instance = True
+    else:
+        if method == "min":
+            solution_hc = min_hc(I)
+        elif method == "heuristic":
+            solution_hc = heuristic(I)
+        H = solution_hc.H_full
+        ordered_instance = False
+
+    time_find_H = time.time() - start_find_H
+
+
+    odd_K = I.K % 2 == 1 # important for constraints
+
 
     ### create model
+    start_build_model = time.time()
+
     m = gp.Model('KEP HCF')
     gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
     m.ModelSense = GRB.MAXIMIZE
@@ -104,8 +133,7 @@ def HCF(I):
     expressions = [ [] for _ in range(I.n) ]        # (5)
     left = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)]     # (6)
     right = [[[] for _ in range(I.n-i-1)] for i in range(I.n-1)]    # (6)
-    odd_K = I.K % 2 == 1 # (8) (only needed if K odd)
-    M = (I.K+3)/2           # (8)
+    M = (I.K+3)/2   # (8)
 
     for i,h in enumerate(H): # enumerating over H faster than looping over nodes
         # constraint (5):
@@ -141,17 +169,29 @@ def HCF(I):
             if left[i][j] or right[i][j]:
                 m.addConstr(sum(left[i][j]) == sum(right[i][j]))
 
+    # constraint (8): #! TODO: find better constraints
+    if odd_K and not ordered_instance:
+        indices_K = [i for i in range(len(H)) if len(H[i]) == I.K]
+        for i in range(len(indices_K)):
+            for j in range(i+1, len(indices_K)):
+                m.addConstr(bin_vars[i] + bin_vars[j] <= 1)
+
+
+    time_build_model = time.time() - start_build_model
+
 
     ### solve model
     # m.write("HCF.lp")
-    # m.setParam('OutputFlag', False)
+    m.setParam('OutputFlag', False)
     m.optimize()
 
     ### make solution class
     solution = KEP_solution(I)
     solution.formulation = 'HCF'
     solution.optimality = m.Status == GRB.OPTIMAL
-    solution.runtime = m.Runtime
+    solution.time_find_H = time_find_H
+    solution.time_build_model = time_build_model
+    solution.runtime = m.Runtime # runtime ILP model
     solution.num_vars = m.NumVars
     solution.num_constrs = m.NumConstrs
     solution.num_nonzero = m.NumNZs
@@ -161,7 +201,7 @@ def HCF(I):
 
     ### determine chosen half-cycles (for ao feasibility check)
     solution.H = H
-    solution.indices = [v.index for v in m.getVars() if v.x > 0.5] 
+    solution.indices = [v.index for v in m.getVars() if v.x > 0.5]
 
     ### solve relaxation
     m_relax = m.relax()
