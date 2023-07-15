@@ -1,4 +1,5 @@
 from collections import Counter
+import numpy as np
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -95,4 +96,40 @@ def heuristic(I):
     solution.c2i = c2i
 
     return solution
+
+
+
+##########################################
+
+
+def get_count(M, num):
+    # M: matrix
+    # num: number of possible half-cycles (length of H_full)
+
+    count = np.zeros(num)
+    for i in range(len(M)):
+        for j in range(len(M[i])):
+            count[M[i][j][0]] += 1
+            count[M[i][j][1]] += 1
+
+    return count
+
+
+def heuristic2(I):
+    """TODO"""
+
+    ## preparations
+    M, c2i, H_full = determine_requirements(I)
+    # print(M)
+
+    ## count
+    count = get_count(M, len(H_full))
+
+    pair_rating = []
+    for i in range(len(M)):
+        for j in range(len(M[i])):
+            pair_rating.append(count[M[i][j][0]] * count[M[i][j][1]])
+
+    # ! continue
+    pass
 
