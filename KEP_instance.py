@@ -169,7 +169,7 @@ class KEP_instance:
             self.make_pred_list()
 
 
-    def sort(self, measure, rule, change=False):
+    def sort(self, measure, rule='desc', change=False):
         """
         Sorts measure based on rule (asc, desc, mid high, mid low)
         If change, will also change the order based on this order
