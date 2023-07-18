@@ -2,7 +2,7 @@ import numpy as np
 from HCF.HCF import *
 
 
-def random_orders(I, k = 1000):
+def random_orders(I, k = 50):
     """For k random orders, finds the number of half-cycles and corresponding ILP solve time for this order"""
     
     number_of_hcs = [] # number of half-cycles
