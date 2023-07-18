@@ -115,21 +115,79 @@ def get_count(M, num):
     return count
 
 
+
+def add_one(M, i, indices):
+    one = []
+    for j in range(len(M[i])):
+        left = M[i][j][0]
+        right = M[i][j][1]
+        if left in indices:
+            one.append(right)
+            if right in indices:
+                return True
+        elif right in indices:
+            one.append(left)
+    return one
+
+
+
 def heuristic2(I):
     """TODO"""
 
-    ## preparations
+
+    ### preparations
     M, c2i, H_full = determine_requirements(I)
-    # print(M)
+    indices = set() # indices of chosen half cycles in solution
+    #? completed_cycles = set() # indices of cycles that already have at least one halfcycle pair
 
-    ## count
-    count = get_count(M, len(H_full))
 
-    pair_rating = []
+    ### count
+    count = get_count(M, len(H_full)) # count how often each half cycle appears
+
+    pair_rating = [] # rating of half-cycle pair is the product of individual counts
     for i in range(len(M)):
         for j in range(len(M[i])):
             pair_rating.append(count[M[i][j][0]] * count[M[i][j][1]])
 
-    # ! continue
-    pass
+
+    ### main loop
+    k = 0
+    for i in range(len(M)):
+        one = add_one(M, i, indices) # need only one hc to complete pair?
+
+        if not one: # choose 'best' pair
+            # find best pair
+            best = -1
+            for j in range(len(M[i])):
+                if pair_rating[k] > best:
+                    best = pair_rating[k]
+                    best_pair = k
+                k += 1
+
+            # add best pair
+            indices.add(M[i][best_pair][0])
+            indices.add(M[i][best_pair][1])
+
+
+        else: # choose 'best' hc
+            if one != True:
+                best = -1
+                for hc in one:
+                    if count[hc] > best:
+                        best = count[hc]
+                        best_hc = hc
+
+                indices.add(best_hc)
+
+            k += len(M[i])
+
+
+    ### return solution 
+    solution = choose_hc_solution(I)
+    solution.name = "Heuristic2"
+    solution.indices = list(indices)
+    solution.H_full = H_full
+    solution.c2i = c2i
+
+    return solution
 
