@@ -99,7 +99,9 @@ def heuristic(I):
 
 
 
-##########################################
+###########################################
+############### HEURISTIC 2 ###############
+###########################################
 
 
 def get_count(M, num):
@@ -132,13 +134,16 @@ def add_one(M, i, indices):
 
 
 def heuristic2(I):
-    """TODO"""
+    """
+    Heuristic solution to find minimum number of halfcycles to select for ILP model.
+    Finds best half-cycle pair to add (product of individual occurences)
+    If a cycle can be made by only adding one extra half-cycle, will choose the hc with the highest occurence
+    """
 
 
     ### preparations
     M, c2i, H_full = determine_requirements(I)
     indices = set() # indices of chosen half cycles in solution
-    #? completed_cycles = set() # indices of cycles that already have at least one halfcycle pair
 
 
     ### count
@@ -161,7 +166,7 @@ def heuristic2(I):
             for j in range(len(M[i])):
                 if pair_rating[k] > best:
                     best = pair_rating[k]
-                    best_pair = k
+                    best_pair = j #!
                 k += 1
 
             # add best pair
@@ -170,7 +175,7 @@ def heuristic2(I):
 
 
         else: # choose 'best' hc
-            if one != True:
+            if one != True: # (if one == True, there already is a hc pair)
                 best = -1
                 for hc in one:
                     if count[hc] > best:

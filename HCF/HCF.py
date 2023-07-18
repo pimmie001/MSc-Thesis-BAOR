@@ -102,6 +102,8 @@ def HCF(I, method = "enumerate"):
             solution_hc = min_hc(I)
         elif method == "heuristic":
             solution_hc = heuristic(I)
+        elif method == "heuristic2":
+            solution_hc = heuristic2(I)
         H = solution_hc.H_full
         ordered_instance = False
 
