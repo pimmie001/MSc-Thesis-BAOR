@@ -77,12 +77,11 @@ def determine_requirements(I):
 
 
 
-def min_hc(I, time_limit=None, pool_sol=0):
+def min_hc(I, time_limit=None):
     """
     ILP model to determine the minimum amount of half cycles needed to cover for all cycles
     First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
     Secondly solves the ILP model and returns the minimum number (and the indice) of half-cycles
-    If pool_sol > 0, will return multiple solutions
     """
 
 
@@ -139,11 +138,7 @@ def min_hc(I, time_limit=None, pool_sol=0):
     # m.write("min_hc.lp")
     m.setParam('OutputFlag', False)
     m.setParam('TimeLimit', time_limit)
-    if pool_sol: m.setParam('PoolSolutions', pool_sol)
-
     m.optimize()
-
-    if pool_sol: return m
 
 
     ### return solution
