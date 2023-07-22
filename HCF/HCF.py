@@ -104,7 +104,7 @@ def HCF(I, method = "enumerate"):
             solution_hc = heuristic(I)
         elif method == "heuristic2":
             solution_hc = heuristic2(I)
-        H = solution_hc.H_full
+        H = [solution_hc.H_full[i] for i in solution_hc.indices]
         ordered_instance = False
 
     time_find_H = time.time() - start_find_H
