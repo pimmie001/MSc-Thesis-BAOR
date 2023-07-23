@@ -91,6 +91,11 @@ def HCF(I, method = "enumerate"):
     ! When K is odd, uses extra constraints to prevent two half-cycles forming a cycle of length K+1
     """
 
+
+    ### make solution class
+    solution = KEP_solution(I) # to store important solution properties
+
+
     ### Determine H (= set of half cycles)
     start_find_H = time.time()
 
@@ -106,6 +111,7 @@ def HCF(I, method = "enumerate"):
             solution_hc = heuristic2(I)
         H = [solution_hc.H_full[i] for i in solution_hc.indices]
         ordered_instance = False
+        solution.solution_hc = solution_hc # this gives info on how good solution_hc performed
 
     time_find_H = time.time() - start_find_H
 
@@ -117,7 +123,7 @@ def HCF(I, method = "enumerate"):
     start_build_model = time.time()
 
     m = gp.Model('KEP HCF')
-    gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
+    # gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
     m.ModelSense = GRB.MAXIMIZE
 
 
@@ -188,12 +194,12 @@ def HCF(I, method = "enumerate"):
     m.optimize()
 
     ### make solution class
-    solution = KEP_solution(I)
     solution.formulation = 'HCF'
     solution.optimality = m.Status == GRB.OPTIMAL
     solution.time_find_H = time_find_H
     solution.time_build_model = time_build_model
     solution.runtime = m.Runtime # runtime ILP model
+    solution.total_time = time_find_H + time_build_model + m.Runtime # total time
     solution.num_vars = m.NumVars
     solution.num_constrs = m.NumConstrs
     solution.num_nonzero = m.NumNZs
