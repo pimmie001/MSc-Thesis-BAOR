@@ -93,7 +93,7 @@ def min_hc(I, time_limit=None):
 
     ##### The ILP model
     m = gp.Model('Choose halfcycles ILP model')
-    gp.setParam('LogFile', 'Logfiles/gurobi_choose_hc.log')
+    # gp.setParam('LogFile', 'Logfiles/gurobi_choose_hc.log')
 
 
     n_c = len(M) # number of cycles
