@@ -20,7 +20,7 @@ def preparations_EEF(I):
 
 
 def EEF2(I):
-    """TODO"""
+    """Solves the KEP using the Extended Edge Formulation (EEF)"""
 
 
     ### preparations
@@ -36,7 +36,7 @@ def EEF2(I):
 
 
     ### variables
-    vars = [[[] for _ in range(len(I.A))] for _ in range(L)]
+    vars = [[] for _ in range(L)]
     arc_to_index = {}
 
     for i,arc in enumerate(I.A):
@@ -44,7 +44,7 @@ def EEF2(I):
 
         for l in range(L):
             x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{arc}')
-            vars[l][i] = x
+            vars[l].append(x)
 
 
     ### constrains
