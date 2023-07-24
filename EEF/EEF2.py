@@ -23,7 +23,7 @@ def EEF2(I):
     """TODO"""
 
 
-    # preparations
+    ### preparations
     preparations_EEF(I)
     L = I.n
     I.make_pred_list()
@@ -36,7 +36,7 @@ def EEF2(I):
 
 
     ### variables
-    vars = [[] for i in range(L)]
+    vars = [[[] for _ in range(len(I.A))] for _ in range(L)]
     arc_to_index = {}
 
     for i,arc in enumerate(I.A):
@@ -44,7 +44,7 @@ def EEF2(I):
 
         for l in range(L):
             x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{arc}')
-            vars[l].append(x)
+            vars[l][i] = x
 
 
     ### constrains
@@ -68,10 +68,8 @@ def EEF2(I):
         m.addConstr(sum(left) <= 1)
 
     ## 7d 
-    for i in range(L):
+    for l in range(L):
         m.addConstr(sum(vars[l]) <= I.K)
-
-    ## 7e: binary constraint
 
 
 
