@@ -160,7 +160,7 @@ def HCF(I, method = "enumerate"):
             right[end][start-end-1].append(bin_vars[i])
 
         # constraint (8):
-        if odd_K:
+        if odd_K and ordered_instance:
             if len(h) == M and h[0] > h[-1]: # len(h) == M equivalent to |V^m(h)| == (K-1)/2
                 m.addConstr(bin_vars[i] == 0)
 
