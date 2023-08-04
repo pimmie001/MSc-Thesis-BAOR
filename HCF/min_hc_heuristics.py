@@ -136,7 +136,7 @@ def add_one(M, i, indices):
 def heuristic2(I):
     """
     Heuristic solution to find minimum number of halfcycles to select for ILP model.
-    Finds best half-cycle pair to add (product of individual occurences)
+    Finds best half-cycle pair to add (product of individual occurences) untill all cycles are completed.
     If a cycle can be made by only adding one extra half-cycle, will choose the hc with the highest occurence
     """
 
@@ -190,6 +190,61 @@ def heuristic2(I):
     ### return solution 
     solution = choose_hc_solution(I)
     solution.name = "Heuristic2"
+    solution.indices = list(indices)
+    solution.H_full = H_full
+    solution.c2i = c2i
+
+    return solution
+
+
+
+###########################################
+############### HEURISTIC 3 ###############
+###########################################
+
+
+def heuristic3(I):
+    """
+    Inspired by the greedy MVC heuristic: Add the neighbor of the node with lowest support
+
+    Similiar to heuristic 2:
+    Find cycle with lowest hc pair score
+    Add hc pair with best score in this cycle
+    Do something different if only one hc pair is needed
+    
+    """
+
+
+    ### preparations
+    M, c2i, H_full = determine_requirements(I)
+    indices = set() # indices of chosen half cycles in solution
+
+
+    ### count
+    count = get_count(M, len(H_full)) # count how often each half cycle appears
+
+    pair_rating = [] # rating of half-cycle pair is the product of individual counts
+    for i in range(len(M)):
+        for j in range(len(M[i])):
+            pair_rating.append(count[M[i][j][0]] * count[M[i][j][1]])
+
+
+    ### main loop
+    k = 0
+    for i in range(len(M)):
+        one = add_one(M, i, indices) # need only one hc to complete pair?
+
+        if not one: # find best neighbor of worst pair
+            pass #! to be finished 
+
+
+        else: # TODO: what to do?
+            pass
+
+
+    ### return solution 
+    solution = choose_hc_solution(I)
+    solution.name = "Heuristic3"
     solution.indices = list(indices)
     solution.H_full = H_full
     solution.c2i = c2i
