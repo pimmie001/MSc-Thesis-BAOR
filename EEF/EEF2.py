@@ -73,6 +73,38 @@ def EEF2(I):
 
 
 
+    ### Variable reduction 1
+    # if copy l of the grapp creates a cycle, only nodes l, l+1, ..., n are allowed in this cycle
+
+    for l in range(L):
+        for i,j in I.A:
+            if i < l or j < l:
+                m.addConstr(vars[l][arc_to_index[(i,j)]] == 0)
+
+    for l in range(L):
+        for i in range(L+1, I.n):
+            left = []
+            right = []
+
+            for j in I.adj_list[i]:
+                left.append(vars[l][arc_to_index[(i,j)]])
+            for j in I.adj_list[l]:
+                right.append(vars[l][arc_to_index[(l,j)]])
+
+            m.addConstr(sum(left) == sum(right))
+
+
+
+    ### Variable reduction 2
+    #! TODO:
+
+
+
+    ### Variable reduction 3
+    #! TODO:
+
+
+
     ### solve model
     m.write("EEF.lp")
     # m.setParam('OutputFlag', False)
