@@ -26,6 +26,8 @@ class KEP_solution:
             self.feasibility = self.check_feasibility_CF()
         elif self.formulation == 'HCF':
             self.feasibility = self.check_feasibility_HCF()
+        elif self.formulation == 'EEF':
+            self.feasibility = self.check_feasibility_EEF()
 
 
     def check_feasibility_CF(self):
@@ -116,6 +118,23 @@ class KEP_solution:
             return False
 
         return True
+
+
+    def check_feasibility_EEF(self):
+        """Checks feasibility of the extended edge formulation (EEF) solution"""
+
+        # extract solution from xvalues
+        self.chosen_cycles = []
+        for values in self.xvalues:
+            chosen_arcs = []
+            for i,x in enumerate(values):
+                if x > 0.5:
+                    chosen_arcs.append(self.I.A[i])
+            if chosen_arcs:
+                self.chosen_cycles.append(chosen_arcs)
+
+        #TODO!: finish this function
+
 
 
     def print_feasibility(self):
