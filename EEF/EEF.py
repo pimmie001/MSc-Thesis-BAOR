@@ -19,7 +19,7 @@ def preparations_EEF(I):
 
 
 
-def EEF2(I):
+def EEF(I):
     """Solves the KEP using the Extended Edge Formulation (EEF)"""
 
 
@@ -107,8 +107,9 @@ def EEF2(I):
 
     ### solve model
     m.write("EEF.lp")
-    # m.setParam('OutputFlag', False)
+    m.setParam('OutputFlag', False)
     m.optimize()
+
 
     ### make solution class
     solution = KEP_solution(I)
@@ -122,8 +123,7 @@ def EEF2(I):
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
 
-    ### ! TODO:
-    # solution.indices = [v.index for v in m.getVars() if v.x > 0.5] 
+    solution.xvalues = [[x.X for x in vars[l]] for l in range(L)]
 
     return solution
 
