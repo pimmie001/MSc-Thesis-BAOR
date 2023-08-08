@@ -106,7 +106,7 @@ def EEF(I):
 
 
     ### solve model
-    m.write("EEF.lp")
+    m.write("EEF.rlp")
     m.setParam('OutputFlag', False)
     m.optimize()
 
