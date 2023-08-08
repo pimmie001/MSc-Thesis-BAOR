@@ -3,7 +3,7 @@ class KEP_solution:
     Class for solution for the KEP
         Stores solution properties such as lower/upper bound. Also includes 
         properties of the corresponding ILP model such as number of variables)
-        Can check the feasibility of a solution found by the CF or HCF
+        Can check the feasibility of a solution found by the CF, HCF or EEF
     """
 
 
@@ -134,10 +134,46 @@ class KEP_solution:
                 self.chosen_cycles.append(chosen_arcs)
 
 
-        print(self.chosen_cycles)
-        ## check if all cycles are not 
-        
+        total_obj = 0
+        chosen_nodes = set()
 
+        for cycle in self.chosen_cycles:
+            # check cycles not larger than K
+            if len(cycle) > self.I.K: 
+                return False
+
+            # check if cycle are actually cycles
+            arc = cycle[0]
+            for _ in range(len(cycle)-1):
+                if not self.I.adj_matrix[arc[0], arc[1]]: # check if arcs exists
+                    return False
+
+                found_arc = False
+                for new_arc in cycle[1:]:
+                    if arc[1] == new_arc[0]:
+                        arc = new_arc
+                        found_arc = True
+                        break
+                if not found_arc:
+                    return False # cant complete cycle
+
+            if not (self.I.adj_matrix[arc[0], arc[1]] and arc[1] == cycle[0][0]): # check if cycle can be completed
+                return False
+
+            # check if nodes not already in another cycle
+            for arc in cycle:
+                if arc[0] in chosen_nodes:
+                    return False
+                chosen_nodes.add(arc[0])
+
+            # keep track on objective
+            total_obj += len(cycle)
+
+        # check objective
+        if abs(total_obj - self.LB) > 0.001:
+            return False
+
+        return True
 
 
     def print_feasibility(self):
