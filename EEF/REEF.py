@@ -11,18 +11,19 @@ from EEF.EEF import preparations_EEF
 
 def floyd_matrix(I, l):
     """
-    Returns floyd matrix when only considering nodes that are greater or equal to l
+    Returns floyd matrix when only considering nodes that are greater than or equal to l
+    For d^l to be defined correctly, requires I.K <= I.n
     """
 
     floyd = np.full((I.n, I.n), I.n) # initialize matrix
     for i in I.adj_list:
-        if i >= l: #! addition
-            floyd[i,i] = 0 #! addition
+        if i >= l:
+            floyd[i,i] = 0
             for j in I.adj_list[i]:
-                if j >= l: #! addition
+                if j >= l:
                     floyd[i,j] = 1 # set direct neighbors distance to 1
 
-    # recursive loop: #! change all loops from l to n instead of 0 to n
+    # recursive loop:
     for i in range(l, I.n):
         for j in range(l, I.n):
             for k in range(l, I.n):
@@ -45,9 +46,6 @@ def REEF(I): #TODO!: finish
     I.make_pred_list()
 
     # distance matrix for each copy l of the graph (d^l_(i,j))
-    if I.K > I.n:
-        raise ValueError("If K > n, problems may occur when creating d^l")
-
     I.d = [] 
     for l in range(L):
         OD_NF = floyd_matrix(I, l)
