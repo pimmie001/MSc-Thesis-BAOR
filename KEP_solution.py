@@ -26,7 +26,7 @@ class KEP_solution:
             self.feasibility = self.check_feasibility_CF()
         elif self.formulation == 'HCF':
             self.feasibility = self.check_feasibility_HCF()
-        elif self.formulation == 'EEF':
+        elif self.formulation == 'EEF' or self.formulation == 'REEF':
             self.feasibility = self.check_feasibility_EEF()
 
 
@@ -121,19 +121,28 @@ class KEP_solution:
 
 
     def check_feasibility_EEF(self):
-        """Checks feasibility of the extended edge formulation (EEF) solution"""
+        """Checks feasibility of the (reduced) extended edge formulation (R)EEF solution"""
 
-        # extract solution from xvalues
-        self.chosen_cycles = []
-        for values in self.xvalues:
-            chosen_arcs = []
-            for i,x in enumerate(values):
-                if x > 0.5:
-                    chosen_arcs.append(self.I.A[i])
-            if chosen_arcs:
-                self.chosen_cycles.append(chosen_arcs)
+        ### extract solution from xvalues
+        if self.formulation == 'EEF':
+            self.chosen_cycles = []
+            for values in self.xvalues:
+                chosen_arcs = []
+                for i,x in enumerate(values):
+                    if x > 0.5:
+                        chosen_arcs.append(self.I.A[i])
+                if chosen_arcs:
+                    self.chosen_cycles.append(chosen_arcs)
+
+        elif self.formulation == 'REEF':
+            self.chosen_cycles = [[] for _ in range(self.I.n)]
+            for key, index in self.arc_to_index.items():
+                if self.xvalues[index] > 0.5:
+                    self.chosen_cycles[key[0]].append((key[1], key[2]))
+            self.chosen_cycles = [x for x in self.chosen_cycles if x] # remove empty lists
 
 
+        ### check feasibility
         total_obj = 0
         chosen_nodes = set()
 

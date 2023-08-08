@@ -145,7 +145,9 @@ def REEF(I):
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
 
+    # to extract cycles and perform feasiblity check:
     solution.xvalues = [x.X for x in vars]
+    solution.arc_to_index = arc_to_index
 
     return solution
 
