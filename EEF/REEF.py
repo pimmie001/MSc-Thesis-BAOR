@@ -17,6 +17,7 @@ def floyd_matrix(I, l):
     floyd = np.full((I.n, I.n), I.n) # initialize matrix
     for i in I.adj_list:
         if i >= l: #! addition
+            floyd[i,i] = 0 #! addition
             for j in I.adj_list[i]:
                 if j >= l: #! addition
                     floyd[i,j] = 1 # set direct neighbors distance to 1
@@ -39,9 +40,22 @@ def REEF(I): #TODO!: finish
 
 
     ### preparations
-    preparations_EEF(I)
-    L = I.n
+    preparations_EEF(I) # creates set of arcs I.A
+    L = I.n # set L
     I.make_pred_list()
+
+    # distance matrix for each copy l of the graph (d^l_(i,j))
+    if I.K > I.n:
+        raise ValueError("If K > n, problems may occur when creating d^l")
+
+    I.d = [] 
+    for l in range(L):
+        OD_NF = floyd_matrix(I, l)
+        I.d.append(OD_NF)
+
+    V = [[i for i in range(l, I.n) if I.d[l][l,i] + I.d[l][i,l] <= I.K] for l in range(L)] # V^l
+    print(V)
+    #! Check if V correctly defined
 
 
     ### create model
@@ -89,8 +103,8 @@ def REEF(I): #TODO!: finish
 
 
     ### solve model
-    m.write("REEF.lp")
-    # m.setParam('OutputFlag', False)
+    m.write("REEF.rlp")
+    m.setParam('OutputFlag', False)
     m.optimize()
 
 
