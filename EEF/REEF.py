@@ -32,7 +32,7 @@ def floyd_matrix(I, l):
 
 
 
-def REEF(I): #TODO!: fix
+def REEF(I):
     """
     Solves the KEP using the Reduced Extended Edge Formulation (REEF):
     REEF is the EEF with all 3 variable reductions.
@@ -50,8 +50,7 @@ def REEF(I): #TODO!: fix
     L_fancy = [l for l in range(L) if len(V_l[l]) > 0]
     A_l = [[(i,j) for (i,j) in I.A if (i in V_l[l] and j in V_l[l] and d[l][l,i] + 1 + d[l][j,l] <= I.K)] for l in range(L)] # A^l
 
-    print(V_l)
-    print(A_l)
+
     ### create model
     m = gp.Model('KEP REEF')
     m.ModelSense = GRB.MAXIMIZE
@@ -120,7 +119,7 @@ def REEF(I): #TODO!: fix
                 if (i,j) in A_l[l]:
                     left.append(vars[arc_to_index[(l,i,j)]])
 
-            for l in I.pred_list[i]:
+            for j in I.adj_list[l]:
                 if (l,j) in A_l[l]:
                     right.append(vars[arc_to_index[(l,l,j)]])
 
@@ -146,8 +145,7 @@ def REEF(I): #TODO!: fix
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
 
-    # solution.xvalues = [[x.X for x in vars[l]] for l in range(L)] #! TODO: Fix this
-
+    solution.xvalues = [x.X for x in vars]
 
     return solution
 
