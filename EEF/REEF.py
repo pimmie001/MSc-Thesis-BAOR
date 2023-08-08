@@ -12,7 +12,6 @@ from EEF.EEF import preparations_EEF
 def floyd_matrix(I, l):
     """
     Returns floyd matrix when only considering nodes that are greater than or equal to l
-    For d^l to be defined correctly, requires I.K <= I.n
     """
 
     floyd = np.full((I.n, I.n), I.n) # initialize matrix
@@ -33,76 +32,105 @@ def floyd_matrix(I, l):
 
 
 
-def REEF(I): #TODO!: finish
+def REEF(I): #TODO!: fix
     """
     Solves the KEP using the Reduced Extended Edge Formulation (REEF):
-    This is the EEF with all 3 variable reductions.
+    REEF is the EEF with all 3 variable reductions.
+    For d^l to be defined correctly, requires I.K <= I.n
     """
 
 
     ### preparations
     preparations_EEF(I) # creates set of arcs I.A
     L = I.n # set L
-    I.make_pred_list()
+    I.make_pred_list() # build predecessor list
 
-    # distance matrix for each copy l of the graph (d^l_(i,j))
-    I.d = [] 
-    for l in range(L):
-        OD_NF = floyd_matrix(I, l)
-        I.d.append(OD_NF)
+    d = [floyd_matrix(I, l) for l in range(L)] # distance matrix for each copy l of the graph (d^l_(i,j))
+    V_l = [[i for i in range(l, I.n) if d[l][l,i] + d[l][i,l] <= I.K] for l in range(L)] # V^l
+    L_fancy = [l for l in range(L) if len(V_l[l]) > 0]
+    A_l = [[(i,j) for (i,j) in I.A if (i in V_l[l] and j in V_l[l] and d[l][l,i] + 1 + d[l][j,l] <= I.K)] for l in range(L)] # A^l
 
-    V = [[i for i in range(l, I.n) if I.d[l][l,i] + I.d[l][i,l] <= I.K] for l in range(L)] # V^l
-    print(V)
-    #! Check if V correctly defined
-
-
+    print(V_l)
+    print(A_l)
     ### create model
-    m = gp.Model('KEP HCF')
-    gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
+    m = gp.Model('KEP REEF')
     m.ModelSense = GRB.MAXIMIZE
+    # gp.setParam('LogFile', 'Logfiles/gurobi_reef.log')
 
 
-    ### variables
-    vars = [[] for _ in range(L)]
-    arc_to_index = {}
+    ### variables and objective (9a)
+    vars = []
+    arc_to_index = {} # to find back variables for the constraints
+    var_count = 0
 
-    for i,arc in enumerate(I.A):
-        arc_to_index[arc] = i
-
-        for l in range(L):
-            x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{arc}')
-            vars[l].append(x)
+    for l in L_fancy:
+        for (i,j) in A_l[l]:
+            x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{i},{j}')
+            vars.append(x)
+            arc_to_index[(l,i,j)] = var_count
+            var_count += 1
 
 
     ### constrains
-    ## 7b
-    for i in range(I.n):
-        for l in range(L):
-            left =[]
+    ## 9b
+    for l in L_fancy:
+        for i in V_l[l]:
+            left = []
             right = []
+
             for j in I.pred_list[i]:
-                left.append(vars[l][arc_to_index[(j,i)]])
+                if (j,i) in A_l[l]:
+                    left.append(vars[arc_to_index[(l,j,i)]])
+
             for j in I.adj_list[i]:
-                right.append(vars[l][arc_to_index[(i,j)]])
+                if (i,j) in A_l[l]:
+                    right.append(vars[arc_to_index[(l,i,j)]])
+
             m.addConstr(sum(left) == sum(right))
 
-    ## 7c
-    for i in range(I.n):
+
+    ## 9c
+    union_V = set(element for subarray in V_l for element in subarray)
+    for i in union_V:
         left = []
-        for l in range(L):
+        for l in L_fancy:
             for j in I.adj_list[i]:
-                left.append(vars[l][arc_to_index[(i,j)]])
+                if (i,j) in A_l[l]:
+                    left.append(vars[arc_to_index[(l,i,j)]])
+
         m.addConstr(sum(left) <= 1)
 
-    ## 7d 
-    for l in range(L):
-        m.addConstr(sum(vars[l]) <= I.K)
+
+    ## 9d
+    for l in L_fancy:
+        left = []
+        for (i,j) in A_l[l]:
+            left.append(vars[arc_to_index[(l,i,j)]])
+
+        m.addConstr(sum(left) <= I.K)
+
+
+    ## 9e
+    for l in L_fancy:
+        for i in V_l[l]:
+            left = []
+            right = []
+
+            for j in I.adj_list[i]:
+                if (i,j) in A_l[l]:
+                    left.append(vars[arc_to_index[(l,i,j)]])
+
+            for l in I.pred_list[i]:
+                if (l,j) in A_l[l]:
+                    right.append(vars[arc_to_index[(l,l,j)]])
+
+            m.addConstr(sum(left) <= sum(right))
 
 
 
     ### solve model
-    m.write("REEF.rlp")
-    m.setParam('OutputFlag', False)
+    m.write("REEF.lp")
+    # m.setParam('OutputFlag', False)
     m.optimize()
 
 
@@ -118,7 +146,7 @@ def REEF(I): #TODO!: finish
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
 
-    solution.xvalues = [[x.X for x in vars[l]] for l in range(L)]
+    # solution.xvalues = [[x.X for x in vars[l]] for l in range(L)] #! TODO: Fix this
 
 
     return solution
