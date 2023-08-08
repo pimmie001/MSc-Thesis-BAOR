@@ -8,67 +8,60 @@ from HCF.min_hc_heuristics import *
 from HCF.rules import *
 from CYCLE.cycle_formulation import *
 from random_orders import random_orders
+from EEF.EEF import EEF
 
 
 
 
 
 
+path = 'Instances/DGGKMPT/50-1.json'
+# path = 'Instances/small/genjson-0.json'
+K = 4
+I = KEP_instance()
+I.build_json_instance(path, K)
 
+solution = EEF(I)
+solution.check_feasibility()
 
-
-# # path = 'Instances/Small/genjson-0.json'
-# path = 'Instances/DGGKMPT/200-1.json'
-# K = 4
-# I = KEP_instance()
-# I.build_json_instance(path, K)
-
-# k = 50
-# number_of_hcs, solve_time = random_orders(I, k)
-
-# print(solve_time)
-# print(number_of_hcs)
-# plt.scatter(number_of_hcs, solve_time)
-# plt.title(f"Instance {I.filename}, k = {k}")
-# plt.show()
 
 
 
 #####################################
 
-path = 'Instances/DGGKMPT/200-1.json'
-K = 4
-I = KEP_instance()
-I.build_json_instance(path, K)
+# path = 'Instances/DGGKMPT/200-1.json'
+# K = 4
+# I = KEP_instance()
+# I.build_json_instance(path, K)
 
-solution = HCF(I)
+# solution = HCF(I)
 
-solution2 = HCF(I, method = "min")
+# solution2 = HCF(I, method = "min")
 
-solution3 = HCF(I, method = "heuristic")
-solution5 = HCF(I, method = "heuristic2")
+# solution3 = HCF(I, method = "heuristic")
+# solution5 = HCF(I, method = "heuristic2")
 
-J = KEP_instance()
-J.build_json_instance(path, K)
-J.sort(betweenness_centrality(J), 'desc', change=True)
-solution4 = HCF(J)
+# J = KEP_instance()
+# J.build_json_instance(path, K)
+# J.sort(betweenness_centrality(J), 'desc', change=True)
+# solution4 = HCF(J)
 
-# print(f"value enumeration {solution.LB}")
-# print(f"value min {solution2.LB}")
-# print(f"value heuristic {solution3.LB}")
+# # print(f"value enumeration {solution.LB}")
+# # print(f"value min {solution2.LB}")
+# # print(f"value heuristic {solution3.LB}")
 
-df = pd.DataFrame(index = ['enumeration', 'min', 'heuristic', 'heuristic2', 'rule'], columns = ['obj', 'time H', 'time build model', 'time solve model', 'total time'])
+# df = pd.DataFrame(index = ['enumeration', 'min', 'heuristic', 'heuristic2', 'rule'], columns = ['obj', 'time H', 'time build model', 'time solve model', 'total time'])
 
 
 
-df.loc['enumeration']   = [solution.LB, solution.time_find_H, solution.time_build_model, solution.runtime, solution.time_find_H + solution.time_build_model + solution.runtime]
-df.loc['min']           = [solution2.LB, solution2.time_find_H, solution2.time_build_model, solution2.runtime, solution2.time_find_H + solution2.time_build_model + solution2.runtime]
-df.loc['heuristic']     = [solution3.LB, solution3.time_find_H, solution3.time_build_model, solution3.runtime, solution3.time_find_H + solution3.time_build_model + solution3.runtime]
-df.loc['heuristic2']    = [solution5.LB, solution5.time_find_H, solution5.time_build_model, solution5.runtime, solution5.time_find_H + solution5.time_build_model + solution5.runtime]
-df.loc['rule']          = [solution4.LB, solution4.time_find_H, solution4.time_build_model, solution4.runtime, solution4.time_find_H + solution4.time_build_model + solution4.runtime]
+# df.loc['enumeration']   = [solution.LB, solution.time_find_H, solution.time_build_model, solution.runtime, solution.time_find_H + solution.time_build_model + solution.runtime]
+# df.loc['min']           = [solution2.LB, solution2.time_find_H, solution2.time_build_model, solution2.runtime, solution2.time_find_H + solution2.time_build_model + solution2.runtime]
+# df.loc['heuristic']     = [solution3.LB, solution3.time_find_H, solution3.time_build_model, solution3.runtime, solution3.time_find_H + solution3.time_build_model + solution3.runtime]
+# df.loc['heuristic2']    = [solution5.LB, solution5.time_find_H, solution5.time_build_model, solution5.runtime, solution5.time_find_H + solution5.time_build_model + solution5.runtime]
+# df.loc['rule']          = [solution4.LB, solution4.time_find_H, solution4.time_build_model, solution4.runtime, solution4.time_find_H + solution4.time_build_model + solution4.runtime]
 
-print('\n')
-print(df)
+# print('\n')
+# print(df)
 
 
 
