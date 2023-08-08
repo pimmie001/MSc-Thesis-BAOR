@@ -26,7 +26,7 @@ class KEP_solution:
             self.feasibility = self.check_feasibility_CF()
         elif self.formulation == 'HCF':
             self.feasibility = self.check_feasibility_HCF()
-        elif self.formulation == 'EEF' or self.formulation == 'REEF':
+        elif self.formulation == 'EEF':
             self.feasibility = self.check_feasibility_EEF()
 
 

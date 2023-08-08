@@ -30,9 +30,9 @@ def EEF(I):
 
 
     ### create model
-    m = gp.Model('KEP HCF')
-    gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
+    m = gp.Model('KEP EEF')
     m.ModelSense = GRB.MAXIMIZE
+    # gp.setParam('LogFile', 'Logfiles/gurobi_eef.log')
 
 
     ### variables
