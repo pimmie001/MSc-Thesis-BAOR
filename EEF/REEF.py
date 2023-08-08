@@ -9,10 +9,32 @@ from EEF.EEF import preparations_EEF
 
 
 
+def floyd_matrix(I, l):
+    """
+    Returns floyd matrix when only considering nodes that are greater or equal to l
+    """
+
+    floyd = np.full((I.n, I.n), I.n) # initialize matrix
+    for i in I.adj_list:
+        if i >= l: #! addition
+            for j in I.adj_list[i]:
+                if j >= l: #! addition
+                    floyd[i,j] = 1 # set direct neighbors distance to 1
+
+    # recursive loop: #! change all loops from l to n instead of 0 to n
+    for i in range(l, I.n):
+        for j in range(l, I.n):
+            for k in range(l, I.n):
+                floyd[j,k] = min(floyd[j,k], floyd[j,i] + floyd[i,k])
+
+    return floyd
+
+
+
 def REEF(I): #TODO!: finish
     """
     Solves the KEP using the Reduced Extended Edge Formulation (REEF):
-    This is the original EEF with variable reductions.
+    This is the EEF with all 3 variable reductions.
     """
 
 
