@@ -26,7 +26,7 @@ class KEP_solution:
             self.feasibility = self.check_feasibility_CF()
         elif self.formulation == 'HCF':
             self.feasibility = self.check_feasibility_HCF()
-        elif self.formulation == 'EEF':
+        elif self.formulation == 'EEF' or self.formulation == 'REEF':
             self.feasibility = self.check_feasibility_EEF()
 
 
@@ -133,7 +133,10 @@ class KEP_solution:
             if chosen_arcs:
                 self.chosen_cycles.append(chosen_arcs)
 
-        #TODO!: finish this function
+
+        print(self.chosen_cycles)
+        ## check if all cycles are not 
+        
 
 
 
