@@ -90,7 +90,7 @@ def heuristic(I):
 
     ## return solution 
     solution = choose_hc_solution(I)
-    solution.name = "Heuristic"
+    solution.name = "heuristic"
     solution.indices = list(indices)
     solution.H_full = H_full
     solution.c2i = c2i
@@ -189,7 +189,7 @@ def heuristic2(I):
 
     ### return solution 
     solution = choose_hc_solution(I)
-    solution.name = "Heuristic2"
+    solution.name = "heuristic2"
     solution.indices = list(indices)
     solution.H_full = H_full
     solution.c2i = c2i
@@ -207,17 +207,18 @@ def heuristic3(I):
     """
     Inspired by the greedy MVC heuristic: Add the neighbor of the node with lowest support
 
-    Similiar to heuristic 2:
+    Similiar to heuristic 2
     Find cycle with lowest hc pair score
-    Add hc pair with best score in this cycle
+    Add hc pair with best score for this cycle (= add best neigbhor)
     Do something different if only one hc pair is needed
-    
+    ! TODO: 
     """
 
 
     ### preparations
     M, c2i, H_full = determine_requirements(I)
     indices = set() # indices of chosen half cycles in solution
+    indices_cycles = set() # indices of cycles that are completed
 
 
     ### count
@@ -229,22 +230,44 @@ def heuristic3(I):
             pair_rating.append(count[M[i][j][0]] * count[M[i][j][1]])
 
 
+    print(M)
+    print(count)
+    print(pair_rating)
+
+
     ### main loop
-    k = 0
-    for i in range(len(M)):
-        one = add_one(M, i, indices) # need only one hc to complete pair?
+    while len(indices_cycles) < len(M):
+        ### find worst node that is left
+        k = 0
+        worst = float('inf')
+        for i in range(len(M)):
+            if i not in indices_cycles:
+                for j in range(len(M[i])):
+                    if pair_rating[k+j] < worst:
+                        worst = pair_rating[k]
+                        worst_pair = (i,k)
+            k += len(M[i])
 
-        if not one: # find best neighbor of worst pair
-            pass #! to be finished 
+
+        ### find best neighbor of worst pair
+        i,k = worst_pair
+        best = 0
+        for _ in range(len(M[i])):
+            if pair_rating[k] > best:
+                best = pair_rating[k]
+                best_pair = k
+            k += 1
 
 
-        else: # TODO: what to do?
-            pass
+        ### add best pair
+        indices.add(M[i][best_pair][0])
+        indices.add(M[i][best_pair][1])
+
 
 
     ### return solution 
     solution = choose_hc_solution(I)
-    solution.name = "Heuristic3"
+    solution.name = "heuristic3"
     solution.indices = list(indices)
     solution.H_full = H_full
     solution.c2i = c2i

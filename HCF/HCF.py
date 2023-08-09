@@ -109,6 +109,8 @@ def HCF(I, method = "enumerate"):
             solution_hc = heuristic(I)
         elif method == "heuristic2":
             solution_hc = heuristic2(I)
+        elif method == "heuristic3":
+            solution_hc = heuristic3(I)
         H = [solution_hc.H_full[i] for i in solution_hc.indices]
         ordered_instance = False
         solution.solution_hc = solution_hc # this gives info on how good solution_hc performed
