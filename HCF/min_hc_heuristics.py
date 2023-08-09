@@ -245,7 +245,6 @@ def heuristic3(I): #! TODO: TEST
                 k += len(M[i])
                 continue
 
-            one = []
             for j in range(len(M[i])):
                 ## check if there are already hc included
                 if M[i][j][0] in indices and M[i][j][1] in indices:
@@ -266,6 +265,10 @@ def heuristic3(I): #! TODO: TEST
                     worst_pair = (i,k)
 
             k += len(M[i])
+
+
+        if len(indices_cycles) == len(M):
+            break
 
 
         ### add hc or hc pair
