@@ -122,7 +122,6 @@ def get_count(M, num):
     return count
 
 
-
 def add_one(M, i, indices):
     one = []
     for j in range(len(M[i])):
@@ -135,7 +134,6 @@ def add_one(M, i, indices):
         elif right in indices:
             one.append(left)
     return one
-
 
 
 def heuristic2(I):
@@ -208,14 +206,15 @@ def heuristic2(I):
 ###########################################
 
 
-def heuristic3(I): #! TODO: TEST
+#! TODO: fix: now gives lower solution than min_hc
+def heuristic3(I):
     """
     Inspired by the greedy MVC heuristic: Add the neighbor of the node with lowest support
-
     Similiar to heuristic 2
-    Find cycle with lowest hc pair score
+
+    Finds cycle with lowest hc pair score
     Add hc pair with best score for this cycle (= add best neigbhor)
-    If only one hc pair is needed, will add best neigbhor of worst hc
+    If only one hc pair is needed, will add the one with highest count
     """
 
 
@@ -275,11 +274,10 @@ def heuristic3(I): #! TODO: TEST
         if one is None: # add best neighbor of worst pair
             i,k = worst_pair
             best = 0
-            for _ in range(len(M[i])):
-                if pair_rating[k] > best:
-                    best = pair_rating[k]
-                    best_pair = k
-                k += 1
+            for j in range(len(M[i])):
+                if pair_rating[k+j] > best:
+                    best = pair_rating[k+j]
+                    best_pair = j
 
             ### add best pair
             indices.add(M[i][best_pair][0])
