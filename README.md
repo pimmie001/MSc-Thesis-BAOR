@@ -1,3 +1,3 @@
 # MSc-Thesis-BAOR
 
-Half-cycle formulation (HCF) for the kidney exchange problem (KEP)
+Evaluation of different variable reduction methods for the kidney exchange problem (KEP)
