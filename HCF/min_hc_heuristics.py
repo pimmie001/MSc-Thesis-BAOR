@@ -206,7 +206,6 @@ def heuristic2(I):
 ###########################################
 
 
-#! TODO: fix: now gives lower solution than min_hc
 def heuristic3(I):
     """
     Inspired by the greedy MVC heuristic: Add the neighbor of the node with lowest support
@@ -238,7 +237,7 @@ def heuristic3(I):
         ### find worst pair that is left
         k = 0
         worst = float('inf')
-        one = None # if changed to int: this is the best hc to add
+        one = None # if changed to int: this is the best hc to add to complete a hc pair
         for i in range(len(M)):
             if i in indices_cycles:
                 k += len(M[i])
@@ -298,3 +297,20 @@ def heuristic3(I):
 
     return solution
 
+
+###########################################
+# def small_check(M, indices):
+#     for i in range(len(M)):
+#         included = False
+#         for j in range(len(M[i])):
+#             if M[i][j][0] in indices and M[i][j][1] in indices:
+#                 included = True
+#                 break
+
+#         if not included:
+#             print(M[i])
+#             print(indices)
+#             return False
+
+#     return True
+# 
