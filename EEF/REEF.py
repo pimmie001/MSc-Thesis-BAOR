@@ -85,7 +85,8 @@ def REEF(I):
                 if (i,j) in A_l[l]:
                     right.append(vars[arc_to_index[(l,i,j)]])
 
-            m.addConstr(sum(left) == sum(right))
+            if left or right:
+                m.addConstr(sum(left) == sum(right))
 
 
     ## 9c
@@ -97,7 +98,8 @@ def REEF(I):
                 if (i,j) in A_l[l]:
                     left.append(vars[arc_to_index[(l,i,j)]])
 
-        m.addConstr(sum(left) <= 1)
+        if left:
+            m.addConstr(sum(left) <= 1)
 
 
     ## 9d
@@ -106,12 +108,16 @@ def REEF(I):
         for (i,j) in A_l[l]:
             left.append(vars[arc_to_index[(l,i,j)]])
 
-        m.addConstr(sum(left) <= I.K)
+        if left:
+            m.addConstr(sum(left) <= I.K)
 
 
     ## 9e
     for l in L_fancy:
         for i in V_l[l]:
+            if i == l:
+                continue # constrain is redundant (left == right)
+
             left = []
             right = []
 
@@ -123,7 +129,8 @@ def REEF(I):
                 if (l,j) in A_l[l]:
                     right.append(vars[arc_to_index[(l,l,j)]])
 
-            m.addConstr(sum(left) <= sum(right))
+            if left or right:
+                m.addConstr(sum(left) <= sum(right))
 
 
 
