@@ -2,8 +2,8 @@ class KEP_solution:
     """
     Class for solution for the KEP
         Stores solution properties such as lower/upper bound. Also includes 
-        properties of the corresponding ILP model such as number of variables)
-        Can check the feasibility of a solution found by the CF, HCF or EEF
+        properties of the corresponding ILP model (e.g. number of variables).
+        Can check the feasibility of a solution found by the CF, HCF or (R)EEF
     """
 
 
