@@ -7,6 +7,11 @@ from HCF.min_hc import *
 
 
 
+###########################################
+############### HEURISTIC 1 ###############
+###########################################
+
+
 def find_most_common_value(M, completed_cycles):
     """Finds most common value in M, only considering cycles that are not completed yet"""
 
@@ -203,15 +208,14 @@ def heuristic2(I):
 ###########################################
 
 
-def heuristic3(I):
+def heuristic3(I): #! TODO: TEST
     """
     Inspired by the greedy MVC heuristic: Add the neighbor of the node with lowest support
 
     Similiar to heuristic 2
     Find cycle with lowest hc pair score
     Add hc pair with best score for this cycle (= add best neigbhor)
-    Do something different if only one hc pair is needed
-    ! TODO: 
+    If only one hc pair is needed, will add best neigbhor of worst hc
     """
 
 
@@ -230,39 +234,58 @@ def heuristic3(I):
             pair_rating.append(count[M[i][j][0]] * count[M[i][j][1]])
 
 
-    print(M)
-    print(count)
-    print(pair_rating)
-
-
     ### main loop
     while len(indices_cycles) < len(M):
-        ### find worst node that is left
+        ### find worst pair that is left
         k = 0
         worst = float('inf')
+        one = None # if changed to int: this is the best hc to add
         for i in range(len(M)):
-            if i not in indices_cycles:
-                for j in range(len(M[i])):
-                    if pair_rating[k+j] < worst:
-                        worst = pair_rating[k]
-                        worst_pair = (i,k)
+            if i in indices_cycles:
+                k += len(M[i])
+                continue
+
+            one = []
+            for j in range(len(M[i])):
+                ## check if there are already hc included
+                if M[i][j][0] in indices and M[i][j][1] in indices:
+                    indices_cycles.add(i)
+                    break
+                if M[i][j][0] in indices:
+                    if one is None or count[one] < count[M[i][j][1]]:
+                        one = M[i][j][1]
+                        one_i = i
+                elif M[i][j][1] in indices:
+                    if one is None or count[one] < count[M[i][j][0]]:
+                        one = M[i][j][0]
+                        one_i = i
+
+                ## find worst pair
+                if one is None and pair_rating[k+j] < worst:
+                    worst = pair_rating[k]
+                    worst_pair = (i,k)
+
             k += len(M[i])
 
 
-        ### find best neighbor of worst pair
-        i,k = worst_pair
-        best = 0
-        for _ in range(len(M[i])):
-            if pair_rating[k] > best:
-                best = pair_rating[k]
-                best_pair = k
-            k += 1
+        ### add hc or hc pair
+        if one is None: # add best neighbor of worst pair
+            i,k = worst_pair
+            best = 0
+            for _ in range(len(M[i])):
+                if pair_rating[k] > best:
+                    best = pair_rating[k]
+                    best_pair = k
+                k += 1
 
+            ### add best pair
+            indices.add(M[i][best_pair][0])
+            indices.add(M[i][best_pair][1])
+            indices_cycles.add(i)
 
-        ### add best pair
-        indices.add(M[i][best_pair][0])
-        indices.add(M[i][best_pair][1])
-
+        else: # add best 'one' hc
+            indices.add(one)
+            indices_cycles.add(one_i)
 
 
     ### return solution 
