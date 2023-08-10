@@ -56,7 +56,7 @@ def get_cycles(I):
 
 
 
-def cycle_formulation(I):
+def CF(I):
     """
     given an instance I, solves the KEP using the cycle formulation
     """
