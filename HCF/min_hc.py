@@ -3,7 +3,7 @@ from gurobipy import GRB
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from CYCLE.cycle_formulation import get_cycles
+from CYCLE.CF import get_cycles
 
 
 class choose_hc_solution:
