@@ -130,11 +130,10 @@ def min_hc(I, time_limit=None):
             # split constraints into two
             m.addConstr(vars_x[M[k][l][0]] >= vars_y[i])
             m.addConstr(vars_x[M[k][l][1]] >= vars_y[i])
-
             i += 1
 
 
-    ### solve model and show chosen half-cycles
+    ### solve model
     # m.write("min_hc.lp")
     m.setParam('OutputFlag', False)
     m.setParam('TimeLimit', time_limit)
