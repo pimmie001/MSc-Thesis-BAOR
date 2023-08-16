@@ -16,6 +16,15 @@ class min_eef_solution:
 
 
 
+def arcs_in_cycle(c):
+    arcs = []
+    for i in range(len(c)-1):
+        arcs.append((c[i],c[i+1]))
+    arcs.append((c[-1],c[0]))
+    return arcs
+
+
+
 def min_eef(I, version = 1, time_limit=None):
     """
     ILP model to determine the minimum number of variables to be activated in the (reduced) EEF model.
@@ -40,7 +49,7 @@ def min_eef(I, version = 1, time_limit=None):
     yvars = []
     dict_y = {} # to find back the variables
     varcount = 0
-    for l in range(len(I.n)):
+    for l in range(I.n):
         for (i,j) in I.A:
             y = m.addVar(vtype=GRB.BINARY, obj = 1)
             yvars.append(y)
@@ -51,7 +60,7 @@ def min_eef(I, version = 1, time_limit=None):
     zvars = []
     dict_z = {}
     varcount = 0
-    for l in range(len(I.n)):
+    for l in range(I.n):
         for k in range(len(C)):
             z = m.addVar(vtype=GRB.BINARY, obj = 0)
             zvars.append(z)
@@ -71,14 +80,14 @@ def min_eef(I, version = 1, time_limit=None):
     # (2) y^l_ij = 1 for all (i,j) in C_k, l, k such that z^l_k = 1
     if version == 1:
         for k in range(len(C)):
-            for l in range(len(I.n)):
-                for (i,j) in C[k]:
+            for l in range(I.n):
+                for (i,j) in arcs_in_cycle(C[k]):
                     m.addConstr(yvars[dict_y[(l,i,j)]] >= zvars[dict_z[(l,k)]])
 
     elif version == 2:
         for k in range(len(C)):
-            for l in range(len(I.n)):
-                m.addConstr(sum([dict_y[(l,i,j)] for (i,j) in C[k]]) >= len(C[k]) * zvars[dict_z[(l,k)]])
+            for l in range(I.n):
+                m.addConstr(sum([dict_y[(l,i,j)] for (i,j) in arcs_in_cycle(C[k])]) >= len(C[k]) * zvars[dict_z[(l,k)]])
 
 
 
@@ -92,12 +101,20 @@ def min_eef(I, version = 1, time_limit=None):
     ### return solution
     solution = min_eef_solution(I)
 
+    solution.optimality = m.Status == GRB.OPTIMAL
+    solution.obj = m.ObjVal
+    solution.runtime = m.Runtime
+    solution.num_vars = m.NumVars
+    solution.num_constrs = m.NumConstrs
+
     # to extract cycles and perform feasiblity check:
     solution.yvalues = [x.X for x in yvars]
     solution.zvalues = [x.X for x in zvars]
     solution.dict_y = dict_y
     solution.dict_z = dict_z
-    solution.obj = m.ObjVal
-    print(solution.yvalues)
-    print(solution.obj)
+
+    # print(solution.yvalues)
+    # print(solution.obj)
+
+    return solution
 
