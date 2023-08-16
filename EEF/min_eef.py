@@ -16,8 +16,11 @@ class min_eef_solution:
 
 
 
-def min_eef(I, time_limit=None):
-    """TODO"""
+def min_eef(I, version = 1, time_limit=None):
+    """
+    ILP model to determine the minimum number of variables to be activated in the (reduced) EEF model.
+    Version = 1 or 2 for different versions of the ILP model. (for testing purposes)
+    """
 
 
     ### preparations
@@ -56,7 +59,7 @@ def min_eef(I, time_limit=None):
             varcount += 1
 
 
-    ### consraints
+    ### constraints
     # (1) all cycles must be made in at least one copy
     for k in range(len(C)):
         LHS = []
@@ -64,11 +67,19 @@ def min_eef(I, time_limit=None):
             LHS.append(zvars[dict_z[(l,k)]])
         m.addConstr(sum(LHS) >= 1)
 
+
     # (2) y^l_ij = 1 for all (i,j) in C_k, l, k such that z^l_k = 1
-    for k in range(len(C)):
-        for l in range(len(I.n)):
-            for (i,j) in C[k]:
-                m.addConstr(yvars[dict_y[(l,i,j)]] >= zvars[dict_z[(l,k)]])
+    if version == 1:
+        for k in range(len(C)):
+            for l in range(len(I.n)):
+                for (i,j) in C[k]:
+                    m.addConstr(yvars[dict_y[(l,i,j)]] >= zvars[dict_z[(l,k)]])
+
+    elif version == 2:
+        for k in range(len(C)):
+            for l in range(len(I.n)):
+                m.addConstr(sum([dict_y[(l,i,j)] for (i,j) in C[k]]) >= len(C[k]) * zvars[dict_z[(l,k)]])
+
 
 
     ### solve model
