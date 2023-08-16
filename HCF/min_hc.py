@@ -6,6 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from CYCLE.CF import get_cycles
 
 
+
 class choose_hc_solution:
     """Simple class for min_hc solution"""
 
@@ -81,7 +82,7 @@ def min_hc(I, time_limit=None):
     """
     ILP model to determine the minimum amount of half cycles needed to cover for all cycles
     First determines matrix M, containing indices of unique half cycles and create a list H_full that stores the halfcycles
-    Secondly solves the ILP model and returns the minimum number (and the indice) of half-cycles
+    Secondly solves the ILP model and returns the minimum number (and the indices) of half-cycles
     """
 
 
@@ -152,7 +153,7 @@ def min_hc(I, time_limit=None):
     solution.c2i = c2i
 
     # info on runtime/number vars etc.
-    solution.name = 'ILP model'
+    solution.name = 'min HCF'
     solution.optimality = m.Status == GRB.OPTIMAL
     solution.obj = m.objVal
     solution.runtime = m.Runtime
