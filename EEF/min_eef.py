@@ -17,6 +17,7 @@ class min_eef_solution:
 
 
 def arcs_in_cycle(c):
+    # given cycle [1,2,3] returns the arcs in the cycle [(1,2), (2,3), (3,1)]
     arcs = []
     for i in range(len(c)-1):
         arcs.append((c[i],c[i+1]))
@@ -25,10 +26,9 @@ def arcs_in_cycle(c):
 
 
 
-def min_eef(I, version = 1, time_limit=None):
+def min_eef(I, time_limit=None):
     """
     ILP model to determine the minimum number of variables to be activated in the (reduced) EEF model.
-    Version = 1 or 2 for different versions of the ILP model. (for testing purposes)
     """
 
 
@@ -78,16 +78,15 @@ def min_eef(I, version = 1, time_limit=None):
 
 
     # (2) y^l_ij = 1 for all (i,j) in C_k, l, k such that z^l_k = 1
-    if version == 1:
-        for k in range(len(C)):
-            for l in range(I.n):
-                for (i,j) in arcs_in_cycle(C[k]):
-                    m.addConstr(yvars[dict_y[(l,i,j)]] >= zvars[dict_z[(l,k)]])
+    for k in range(len(C)):
+        for l in range(I.n):
+            for (i,j) in arcs_in_cycle(C[k]):
+                m.addConstr(yvars[dict_y[(l,i,j)]] >= zvars[dict_z[(l,k)]])
 
-    elif version == 2:
-        for k in range(len(C)):
-            for l in range(I.n):
-                m.addConstr(sum([dict_y[(l,i,j)] for (i,j) in arcs_in_cycle(C[k])]) >= len(C[k]) * zvars[dict_z[(l,k)]])
+    # # alternative for constraint (2) but was much slower
+    # for k in range(len(C)):
+    #     for l in range(I.n):
+    #         m.addConstr(sum([yvars[dict_y[(l,i,j)]] for (i,j) in arcs_in_cycle(C[k])]) >= len(C[k]) * zvars[dict_z[(l,k)]])
 
 
 
