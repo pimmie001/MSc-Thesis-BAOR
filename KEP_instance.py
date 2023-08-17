@@ -214,19 +214,6 @@ class KEP_instance:
                 self.pred_list[neighbor].append(i)
 
 
-    def get_adj_list(self, V, A):
-        """
-        Given set of vertices V and arcs A, returns an adjacency list.
-        Used in the extended edge formulation because of the 
-        different versions of A for different copies of the graph.
-        """
-
-        adj_list = {i: [] for i in V}
-        for (i,j) in A:
-            adj_list[i].append(j)
-        return adj_list
-
-
     def build_graph(self):
         """Builds a networkx graph of the instance (for example used to calculate closeness/centrality degree)"""
 
