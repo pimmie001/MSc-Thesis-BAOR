@@ -6,28 +6,51 @@ from HCF.HCF import HCF
 from HCF.min_hc import *
 from HCF.min_hc_heuristics import *
 from HCF.rules import *
-from CYCLE.cycle_formulation import *
+from CYCLE.CF import *
 from random_orders import random_orders
 from EEF.EEF import EEF
+from EEF.REEF import floyd_matrix, REEF
+from EEF.min_eef import min_eef
+
+
+from EEF.REEF2 import REEF2
 
 
 
 
-
-
-path = 'Instances/DGGKMPT/50-1.json'
+path = 'Instances/DGGKMPT/100-6.json'
 # path = 'Instances/small/genjson-0.json'
-K = 4
+K = 5
 I = KEP_instance()
 I.build_json_instance(path, K)
 
-solution = EEF(I)
-solution.check_feasibility()
+sol1 = REEF(I)
+sol2 = REEF2(I)
+
+print(f'sol1: {sol1.obj, sol1.time_build_model, sol1.runtime}')
+print(f'sol2: {sol2.obj, sol2.time_build_model, sol2.runtime}')
+
+# sol2.check_feasibility()
+# sol2.print_feasibility()
 
 
+# solution1 = min_eef(I, version = 1)
+# solution2 = min_eef(I, version = 2)
+
+# print(f'obj1: {solution1.obj}')
+# print(f'obj2: {solution2.obj}')
+
+# print(f'runtime1: {solution1.runtime}')
+# print(f'runtime2: {solution2.runtime}')
+
+# print(f'vars1: {solution1.num_vars}')
+# print(f'vars2: {solution2.num_vars}')
+
+# print(f'numconstr1 {solution1.num_constrs}')
+# print(f'numconstr2 {solution2.num_constrs}')
 
 
-#####################################
+################################################################
 
 # path = 'Instances/DGGKMPT/200-1.json'
 # K = 4
@@ -64,35 +87,26 @@ solution.check_feasibility()
 # print(df)
 
 
-
+################################################################
 
 # nodes = ['A', 'B', 'C', 'D']
 # arcs = [('A','B'), ('B','D'), ('D','C'), ('C','A'), ('B','C'), ('C','B')]
 # K = 4
 
 # I = KEP_instance()
-# I.build_instance(arcs, nodes)
-# I.set_K(K)
+# I.build_instance(arcs, nodes, K)
 
-# heuristic2(I)
+# sol1 = REEF(I)
+# sol2 = REEF2(I)
 
-# sol = heuristic(I)
-# print(len(sol))
+# print(f'sol1: {sol1.obj, sol1.time_build_model, sol1.runtime}')
+# print(f'sol2: {sol2.obj, sol2.time_build_model, sol2.runtime}')
 
-
-
-
-
-# path = 'Instances/DGGKMPT/200-2.json'
-# I = KEP_instance()
-# K = 4
-# I.build_json_instance(path, K)
+# sol2.check_feasibility()
+# sol2.print_feasibility()
 
 
-
-
-
-###########################################
+################################################################
 
 # # HCF
 # solution_hcf = HCF(I)
