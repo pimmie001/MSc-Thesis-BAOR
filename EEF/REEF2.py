@@ -42,14 +42,13 @@ def REEF2(I):
     """
 
 
-    start_build = time.time()
-
     ### preparations
+    start_build = time.time()
     preparations_EEF(I) # creates set of arcs I.A
     L = I.n # set L
     I.make_pred_list() # build predecessor list
 
-    d = [floyd_matrix(I, l) for l in range(L)] # distance matrix for each copy l of the graph (d^l_(i,j))
+    d = [floyd_matrix(I, l) for l in range(L)] # distance matrix for each copy l of the graph (d^l_(i,j)) #! takes very long time
     V_l = [[i for i in range(l, I.n) if d[l][l,i] + d[l][i,l] <= I.K] for l in range(L)] # V^l
     L_fancy = [l for l in range(L) if len(V_l[l]) > 0]
     A_l = [[(i,j) for (i,j) in I.A if (i in V_l[l] and j in V_l[l] and d[l][l,i] + 1 + d[l][j,l] <= I.K)] for l in range(L)] # A^l
