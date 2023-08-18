@@ -11,7 +11,7 @@ from EEF.REEF import floyd_matrix
 
 
 
-def REEF2(I):
+def REEF2(I, get_var_count = False):
     """
     Solves the KEP using the Reduced Extended Edge Formulation (REEF):
     REEF is the EEF with all 3 variable reductions.
@@ -49,6 +49,11 @@ def REEF2(I):
             vars.append(x)
             arc_to_index[(l,i,j)] = var_count
             var_count += 1
+
+
+    ##### !
+    if get_var_count:
+        return var_count 
 
 
     ### constrains
