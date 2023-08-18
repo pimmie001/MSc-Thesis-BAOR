@@ -16,12 +16,11 @@ def floyd_matrix(I, l):
     """
 
     floyd = np.full((I.n, I.n), I.n) # initialize matrix
-    for i in I.adj_list:
-        if i >= l:
-            floyd[i,i] = 0
-            for j in I.adj_list[i]:
-                if j >= l:
-                    floyd[i,j] = 1 # set direct neighbors distance to 1
+    for i in range(l, I.n):
+        floyd[i,i] = 0
+        for j in I.adj_list[i]:
+            if j >= l:
+                floyd[i,j] = 1 # set direct neighbors distance to 1
 
     # recursive loop:
     for i in range(l, I.n):
