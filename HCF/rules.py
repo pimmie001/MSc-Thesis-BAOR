@@ -1,11 +1,13 @@
-import networkx as nx
 
+#! not necessarily for HCF only
+
+import networkx as nx
 
 
 def degree(I, Type = 'tot'):
     """
     Returns the degree of the nodes
-    Type:   tot --> total degree,   in --> incoming degree,   out --> outgoing degree
+    Type:   tot: total degree,   in: incoming degree,   out: outgoing degree
     """
 
     if Type == 'tot':
@@ -39,7 +41,7 @@ def betweenness_centrality(I):
 
 
 
-def betweenness_centrality_K(I): # does not seem to work better than betweenness centrality
+def betweenness_centrality_K(I): # does not seem to work better than betweenness centrality for HCF
     """The betweenness centrality of a node is the amount of times the node lies on a shortest path of size K or less between other nodes"""
 
     I.build_graph()
