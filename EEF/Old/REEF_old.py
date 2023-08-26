@@ -118,7 +118,7 @@ def REEF2(I):
 
 
     ### solve model
-    m.write("REEF.lp")
+    # m.write("REEF_old.lp")
     m.setParam('OutputFlag', False)
     m.optimize()
 
