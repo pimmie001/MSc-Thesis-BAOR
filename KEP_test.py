@@ -18,9 +18,9 @@ from EEF.REEF2 import REEF2
 
 
 
-path = 'Instances/DGGKMPT/100-6.json'
+path = 'Instances/DGGKMPT/200-5.json'
 # path = 'Instances/small/genjson-0.json'
-K = 5
+K = 4
 I = KEP_instance()
 I.build_json_instance(path, K)
 
