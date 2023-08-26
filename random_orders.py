@@ -1,5 +1,6 @@
 import numpy as np
 from HCF.HCF import *
+from EEF.REEF import *
 
 
 def random_orders(I, k = 50):
@@ -19,3 +20,22 @@ def random_orders(I, k = 50):
 
     return number_of_hcs, solve_time, total_time
 
+
+def random_orders_eef(I, k = 50):
+    """For k random orders, finds the number and variance of activated variables in EEF model, also returns ILP and total solve time"""
+
+    number_of_variables = [] # number of activated variables
+    variance_in_variables = [] # variance in number activated variables in graph
+    solve_time = [] # time to solve ILP model
+    total_time = [] # total time
+
+    for _ in range(k):
+        I.change_order(np.random.permutation(I.n))
+        solution = REEF(I)
+
+        number_of_variables.append(solution.num_vars)
+        variance_in_variables.append(solution.variance)
+        solve_time.append(solution.runtime)
+        total_time.append(solution.total_time)
+
+    return number_of_variables, variance_in_variables, solve_time, total_time
