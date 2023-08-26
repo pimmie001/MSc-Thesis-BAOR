@@ -6,8 +6,19 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from KEP_instance import *
 from KEP_solution import *
-from EEF.EEF import preparations_EEF
 
+
+
+
+def preparations_EEF(I):
+    """Some preparations for the EEF"""
+
+    I.A = [] # set of arcs
+    for i in I.adj_list:
+        for j in I.adj_list[i]:
+            I.A.append((i,j))
+
+    return 
 
 
 
@@ -33,7 +44,7 @@ def floyd_matrix(I, l):
 
 
 
-def REEF(I, get_var_count = False):
+def REEF(I):
     """
     Solves the KEP using the Reduced Extended Edge Formulation (REEF):
     REEF is the EEF with all 3 variable reductions.
@@ -71,11 +82,6 @@ def REEF(I, get_var_count = False):
             vars.append(x)
             arc_to_index[(l,i,j)] = var_count
             var_count += 1
-
-
-    ##### !
-    if get_var_count:
-        return var_count 
 
 
     ### constrains
@@ -133,9 +139,15 @@ def REEF(I, get_var_count = False):
     solution.UB = m.ObjBound # best upper bound
     solution.gap = m.MIPGap # optimality gap
 
-    # to extract cycles and perform feasiblity check:
+    ## to extract cycles and perform feasiblity check:
     solution.xvalues = [x.X for x in vars]
     solution.arc_to_index = arc_to_index
+
+    ## for comparison
+    # num_vars
+    solution.variance = np.var([len(A_l[l]) for l in L_fancy]) # variance of number of activated variables in graphs
+    # ILP time = runtime
+    solution.total_time = build_model + m.Runtime # total time
 
     return solution
 
