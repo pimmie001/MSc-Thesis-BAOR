@@ -6,7 +6,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from KEP_instance import *
 from KEP_solution import *
-from EEF.EEF import preparations_EEF
+from EEF.Old.EEF import preparations_EEF
 from EEF.REEF import floyd_matrix
 
 

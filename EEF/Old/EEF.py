@@ -5,17 +5,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from KEP_instance import *
 from KEP_solution import *
-
-
-def preparations_EEF(I):
-    """Some preparations for the EEF"""
-
-    I.A = [] # set of arcs
-    for i in I.adj_list:
-        for j in I.adj_list[i]:
-            I.A.append((i,j))
-
-    return 
+from EEF.REEF import preparations_EEF
 
 
 

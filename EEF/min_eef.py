@@ -4,7 +4,7 @@ from gurobipy import GRB
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from CYCLE.CF import get_cycles
-from EEF.EEF import preparations_EEF
+from EEF.REEF import preparations_EEF
 
 
 
