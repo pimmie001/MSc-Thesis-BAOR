@@ -58,16 +58,15 @@ for file_name in sorted_file_names:
         else:
             k = 5
 
-        k = 3#!!!!!!!!!!!
+
         instance_name = f'{file_name}, K = {K}'
 
 
         number_of_variables, variance_in_variables, solve_time, total_time = random_orders_eef(I, k=k)
-        print(df)
         for i in range(k):
             df.loc[instance_name, f'random order {i+1}'] = ((number_of_variables[i], variance_in_variables[i], solve_time[i], total_time[i]),)
 
-        print(df)
+
         ### heuristics #! (no heuristics yet for EEF)
 
 
@@ -79,9 +78,9 @@ for file_name in sorted_file_names:
         df.loc[instance_name, 'betweenness centrality'] = ((solution_BC.num_vars, solution_BC.variance, solution_BC.runtime, solution_BC.total_time),)
 
 
-        # ### min_HC's #!!! need to build function that solves KEP given solution of min_eef
-        # solution_min = min_eef(I)
-        # df.loc[instance_name, 'ILP'] = ((solution_min.num_vars, solution_min.variance, solution_min.runtime, solution_min.total_time),)
+        ### min_HC's #! does not work yet
+        solution_min = REEF(I, method='min')
+        df.loc[instance_name, 'ILP'] = ((solution_min.num_vars, solution_min.variance, solution_min.runtime, solution_min.total_time),)
 
 
         ### write to excel sheet
