@@ -6,7 +6,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from KEP_instance import *
 from KEP_solution import *
-
+from EEF.min_eef import min_eef
 
 
 
@@ -44,44 +44,53 @@ def floyd_matrix(I, l):
 
 
 
-def REEF(I):
+def REEF(I, method='default'):
     """
     Solves the KEP using the Reduced Extended Edge Formulation (REEF):
     REEF is the EEF with all 3 variable reductions.
     Uses expression lists
     For d^l to be defined correctly, requires I.K <= I.n
+    method: default: standard variable reductions, min: ILP model, heuristic: TODO
     """
 
 
-    ### preparations
-    start_build = time.time()
-    preparations_EEF(I) # creates set of arcs I.A
-    L = I.n # set L
-    I.make_pred_list() # build predecessor list
+    if method == 'default': 
+        ### preparations
+        start_build = time.time()
+        preparations_EEF(I) # creates set of arcs I.A
+        L = I.n # set L
+        I.make_pred_list() # build predecessor list
 
-    d = [floyd_matrix(I, l) for l in range(L)] # distance matrix for each copy l of the graph (d^l_(i,j)) #! takes very long time
-    V_l = [[i for i in range(l, I.n) if d[l][l,i] + d[l][i,l] <= I.K] for l in range(L)] # V^l
-    L_fancy = [l for l in range(L) if len(V_l[l]) > 0]
-    A_l = [[(i,j) for (i,j) in I.A if (i in V_l[l] and j in V_l[l] and d[l][l,i] + 1 + d[l][j,l] <= I.K)] for l in range(L)] # A^l
-
-
-    ### create model
-    m = gp.Model('KEP REEF')
-    m.ModelSense = GRB.MAXIMIZE
-    # gp.setParam('LogFile', 'Logfiles/gurobi_reef.log')
+        d = [floyd_matrix(I, l) for l in range(L)] # distance matrix for each copy l of the graph (d^l_(i,j)) #! takes very long time
+        V_l = [[i for i in range(l, I.n) if d[l][l,i] + d[l][i,l] <= I.K] for l in range(L)] # V^l
+        L_fancy = [l for l in range(L) if len(V_l[l]) > 0]
+        A_l = [[(i,j) for (i,j) in I.A if (i in V_l[l] and j in V_l[l] and d[l][l,i] + 1 + d[l][j,l] <= I.K)] for l in range(L)] # A^l
 
 
-    ### variables and objective (9a)
-    vars = []
-    arc_to_index = {} # to find back variables for the constraints
-    var_count = 0
+        ### create model
+        m = gp.Model('KEP REEF')
+        m.ModelSense = GRB.MAXIMIZE
+        # gp.setParam('LogFile', 'Logfiles/gurobi_reef.log')
 
-    for l in L_fancy:
-        for (i,j) in A_l[l]:
-            x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{i},{j}')
-            vars.append(x)
-            arc_to_index[(l,i,j)] = var_count
-            var_count += 1
+
+        ### variables and objective (9a)
+        vars = []
+        arc_to_index = {} # to find back variables for the constraints
+        var_count = 0
+
+        for l in L_fancy:
+            for (i,j) in A_l[l]:
+                x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{i},{j}')
+                vars.append(x)
+                arc_to_index[(l,i,j)] = var_count
+                var_count += 1
+
+    elif method == 'min':
+        min_eef_solution = min_eef(I)
+        # todo: create variables
+
+    elif method == 'heuristic':
+        pass # todo
 
 
     ### constrains
