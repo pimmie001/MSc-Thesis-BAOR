@@ -10,17 +10,6 @@ from EEF.min_eef import min_eef
 
 
 
-def preparations_EEF(I):
-    """Some preparations for the EEF"""
-
-    I.A = [] # set of arcs
-    for i in I.adj_list:
-        for j in I.adj_list[i]:
-            I.A.append((i,j))
-
-    return 
-
-
 
 def floyd_matrix(I, l):
     """
@@ -53,11 +42,10 @@ def REEF(I, method='default'):
     method: default: standard variable reductions, min: ILP model, heuristic: TODO
     """
 
-
+    start_vars = time.time()
     if method == 'default': 
         ### preparations
-        start_build = time.time()
-        preparations_EEF(I) # creates set of arcs I.A
+        I.preparations_EEF() # creates set of arcs I.A
         L = I.n # set L
         I.make_pred_list() # build predecessor list
 
@@ -87,10 +75,25 @@ def REEF(I, method='default'):
 
     elif method == 'min':
         min_eef_solution = min_eef(I)
-        # todo: create variables
+
+        vars = []
+        arc_to_index = {} # to find back variables for the constraints
+        var_count = 0
+
+        for l in range(I.n):
+            for (i,j) in I.A:
+                if min_eef_solution.yvalues[min_eef_solution.dict_y[(l,i,j)]] > 0.5:
+                    x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{i},{j}')
+                    vars.append(x)
+                    arc_to_index[(l,i,j)] = var_count
+                    var_count += 1
 
     elif method == 'heuristic':
         pass # todo
+
+
+    determine_vars = time.time() - start_vars # time to create varaiables
+    start_build = time.time() # start time of model building
 
 
     ### constrains

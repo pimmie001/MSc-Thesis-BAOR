@@ -4,7 +4,6 @@ from gurobipy import GRB
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from CYCLE.CF import get_cycles
-from EEF.REEF import preparations_EEF
 
 
 
@@ -33,7 +32,7 @@ def min_eef(I, time_limit=None):
 
 
     ### preparations
-    preparations_EEF(I) # create set of arcs
+    I.preparations_EEF() # create set of arcs
     C = get_cycles(I) # create set of cycles
     if time_limit is None:
         time_limit = 600

@@ -226,3 +226,12 @@ class KEP_instance:
         self.G = nx.DiGraph()
         self.G.add_nodes_from(nodes)
         self.G.add_edges_from(arcs)
+
+
+    def preparations_EEF(self):
+        """Some preparations for the EEF"""
+
+        self.A = [] # set of arcs
+        for i in self.adj_list:
+            for j in self.adj_list[i]:
+                self.A.append((i,j))
