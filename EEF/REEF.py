@@ -42,7 +42,12 @@ def REEF(I, method='default'):
     method: default: standard variable reductions, min: ILP model, heuristic: TODO
     """
 
-    start_vars = time.time()
+    ### create model
+    start_build = time.time()
+    m = gp.Model('KEP REEF')
+    m.ModelSense = GRB.MAXIMIZE
+
+
     if method == 'default': 
         ### preparations
         I.preparations_EEF() # creates set of arcs I.A
@@ -53,13 +58,6 @@ def REEF(I, method='default'):
         V_l = [[i for i in range(l, I.n) if d[l][l,i] + d[l][i,l] <= I.K] for l in range(L)] # V^l
         L_fancy = [l for l in range(L) if len(V_l[l]) > 0]
         A_l = [[(i,j) for (i,j) in I.A if (i in V_l[l] and j in V_l[l] and d[l][l,i] + 1 + d[l][j,l] <= I.K)] for l in range(L)] # A^l
-
-
-        ### create model
-        m = gp.Model('KEP REEF')
-        m.ModelSense = GRB.MAXIMIZE
-        # gp.setParam('LogFile', 'Logfiles/gurobi_reef.log')
-
 
         ### variables and objective (9a)
         vars = []
@@ -73,11 +71,46 @@ def REEF(I, method='default'):
                 arc_to_index[(l,i,j)] = var_count
                 var_count += 1
 
-    elif method == 'min':
-        min_eef_solution = min_eef(I)
+        ### constrains
+        union_V = set(element for subarray in V_l for element in subarray)
+
+        ## expression lists
+        arcs_in = [[[] for _ in range(I.n)] for _ in range(I.n)] # arcs going in (constraint 9b)
+        arcs_out = [[[] for _ in range(I.n)] for _ in range(I.n)] # arcs going out (constraint 9b, 9e)
+        arcs_out_tot = [[] for _ in range(len(union_V))] # arcs going out over all copies l (constraint 9c)
+        max_size = [[] for _ in range(I.n)] # max cycle length (constraint 9d)
+        arcs_out_l = [[] for _ in range(I.n)] # RHS only depends on l (constraint 9)
+
+        ## add variables to expression lists
+        for l in L_fancy:
+            for (i,j) in A_l[l]:
+                x = vars[arc_to_index[(l,i,j)]] # x^l_ij
+
+                arcs_in[l][j].append(x)
+                arcs_out[l][i].append(x)
+                arcs_out_tot[i].append(x)
+                max_size[l].append(x)
+                if i == l: arcs_out_l[l].append(x)
+
+        ## add constraints to model
+        for l in L_fancy:
+            m.addConstr(sum(max_size[l]) <= I.K) # 9d
+            for i in V_l[l]:
+                m.addConstr(sum(arcs_in[l][i]) == sum(arcs_out[l][i])) # 9b
+                m.addConstr(sum(arcs_out[l][i]) <= sum(arcs_out_l[l])) # 9e
+
+        for i in union_V:
+            m.addConstr(sum(arcs_out_tot[i]) <= 1) # 9c
+
+
+    else:
+        if method == 'min':
+            min_eef_solution = min_eef(I)
+        elif method == 'heuristic':
+            pass # todo
 
         vars = []
-        arc_to_index = {} # to find back variables for the constraints
+        arc_to_index = {}
         var_count = 0
 
         for l in range(I.n):
@@ -88,51 +121,15 @@ def REEF(I, method='default'):
                     arc_to_index[(l,i,j)] = var_count
                     var_count += 1
 
-    elif method == 'heuristic':
-        pass # todo
+        #! TODO: build constraints
 
 
-    determine_vars = time.time() - start_vars # time to create varaiables
-    start_build = time.time() # start time of model building
-
-
-    ### constrains
-    union_V = set(element for subarray in V_l for element in subarray)
-
-    ## expression lists
-    arcs_in = [[[] for _ in range(I.n)] for _ in range(I.n)] # arcs going in (constraint 9b)
-    arcs_out = [[[] for _ in range(I.n)] for _ in range(I.n)] # arcs going out (constraint 9b, 9e)
-    arcs_out_tot = [[] for _ in range(len(union_V))] # arcs going out over all copies l (constraint 9c)
-    max_size = [[] for _ in range(I.n)] # max cycle length (constraint 9d)
-    arcs_out_l = [[] for _ in range(I.n)] # RHS only depends on l (constraint 9)
-
-    ## add variables to expression lists
-    for l in L_fancy:
-        for (i,j) in A_l[l]:
-            x = vars[arc_to_index[(l,i,j)]] # x^l_ij
-
-            arcs_in[l][j].append(x)
-            arcs_out[l][i].append(x)
-            arcs_out_tot[i].append(x)
-            max_size[l].append(x)
-            if i == l: arcs_out_l[l].append(x)
-
-    ## add constraints to model
-    for l in L_fancy:
-        m.addConstr(sum(max_size[l]) <= I.K) # 9d
-        for i in V_l[l]:
-            m.addConstr(sum(arcs_in[l][i]) == sum(arcs_out[l][i])) # 9b
-            m.addConstr(sum(arcs_out[l][i]) <= sum(arcs_out_l[l])) # 9e
-
-    for i in union_V:
-        m.addConstr(sum(arcs_out_tot[i]) <= 1) # 9c
-
-
+    ### end building model
     build_model = time.time() - start_build
 
 
     ### solve model
-    # m.write("REEF.lp")
+    # m.write("EEF.lp")
     m.setParam('OutputFlag', False)
     m.optimize()
 
