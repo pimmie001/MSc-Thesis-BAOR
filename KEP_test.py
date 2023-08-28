@@ -8,27 +8,22 @@ from HCF.min_hc_heuristics import *
 from HCF.rules import *
 from CYCLE.CF import *
 from random_orders import random_orders
-from EEF.EEF import EEF
-from EEF.REEF import floyd_matrix, REEF
+from EEF.REEF import REEF
 from EEF.min_eef import min_eef
 
 
-from EEF.REEF2 import REEF2
 
 
-
-
-path = 'Instances/DGGKMPT/200-5.json'
+path = 'Instances/DGGKMPT/100-6.json'
 # path = 'Instances/small/genjson-0.json'
 K = 4
 I = KEP_instance()
 I.build_json_instance(path, K)
 
 sol1 = REEF(I)
-sol2 = REEF2(I)
 
-print(f'sol1: {sol1.obj, sol1.time_build_model, sol1.runtime}')
-print(f'sol2: {sol2.obj, sol2.time_build_model, sol2.runtime}')
+print(f'sol1: {sol1.obj, sol1.runtime, sol1.total_time}')
+
 
 # sol2.check_feasibility()
 # sol2.print_feasibility()
