@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from copy import deepcopy
 from HCF.rules import *
 from HCF.HCF import HCF
-from EEF.REEF import REEF
+from EEF.EEF import EEF
 from EEF.min_eef import min_eef
 import os 
 import pandas as pd
@@ -73,13 +73,13 @@ for file_name in sorted_file_names:
         ### betweenness centrality
         J = deepcopy(I)
         J.sort(betweenness_centrality(J), change = True)
-        solution_BC = REEF(J)
+        solution_BC = EEF(J)
 
         df.loc[instance_name, 'betweenness centrality'] = ((solution_BC.num_vars, solution_BC.variance, solution_BC.runtime, solution_BC.total_time),)
 
 
         ### min_HC's #! does not work yet
-        solution_min = REEF(I, method='min')
+        solution_min = EEF(I, method='min')
         df.loc[instance_name, 'ILP'] = ((solution_min.num_vars, solution_min.variance, solution_min.runtime, solution_min.total_time),)
 
 
