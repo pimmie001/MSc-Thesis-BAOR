@@ -171,8 +171,8 @@ def EEF(I, method='REEF'):
 
 
     ### solve model
-    m.write(f"EEF.{method}.lp")
-    # m.setParam('OutputFlag', False)
+    # m.write(f"EEF.{method}.lp")
+    m.setParam('OutputFlag', False)
     m.optimize()
 
 
