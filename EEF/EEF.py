@@ -67,12 +67,14 @@ def EEF(I, method='REEF'):
         arc_to_index = {} # to find back variables for the constraints
         var_count = 0
 
+        nvars = []
         for l in L_fancy:
             for (i,j) in A_l[l]:
                 x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{i},{j}')
                 vars.append(x)
                 arc_to_index[(l,i,j)] = var_count
                 var_count += 1
+            nvars.append(len(A_l[l]))
 
 
         ### constrains
@@ -120,13 +122,17 @@ def EEF(I, method='REEF'):
         arc_to_index = {}
         var_count = 0
 
+        nvars = []
         for l in range(I.n):
+            var_count_l = 0
             for (i,j) in I.A:
                 if min_eef_solution.yvalues[min_eef_solution.dict_y[(l,i,j)]] > 0.5:
                     x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{i},{j}')
                     vars.append(x)
                     arc_to_index[(l,i,j)] = var_count
                     var_count += 1
+                    var_count_l += 1
+            nvars.append(var_count_l)
 
 
         ### constraints #! improve performance
@@ -187,10 +193,7 @@ def EEF(I, method='REEF'):
 
     ## for comparison
     solution.num_vars = m.NumVars
-    if method == 'REEF':
-        solution.variance = np.var([len(A_l[l]) for l in L_fancy]) # variance of number of activated variables in graphs
-    else: 
-        solution.varaince = 0 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FIX
+    solution.variance = np.var([x for x in nvars if x > 0]) # variance of number of activated variables in graphs
     solution.time_build_model = build_model # building time
     solution.runtime = m.Runtime # solving time
     solution.total_time = build_model + m.Runtime # total time
