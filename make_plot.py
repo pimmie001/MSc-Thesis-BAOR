@@ -27,8 +27,8 @@ folder_path = 'Instances/DGGKMPT'
 file_names = os.listdir(folder_path)
 sorted_file_names = sorted(file_names, key=get_numeric_part)
 
-index = [f'random order {i+1}' for i in range(50)] + ['betweenness centrality', 'ILP']
-columns = ['vars, variance, ilp time, total time']
+columns = [f'random order {i+1}' for i in range(50)] + ['betweenness centrality', 'ILP']
+# # columns = ['vars', 'variance', 'ilp time', 'total time']
 df = pd.DataFrame(columns=columns)
 
 save_folder = r'C:\Users\pimvk\OneDrive\Documents\Studie\University\Master\Thesis BAOR\Results\EEF' # DESKTOP
@@ -61,13 +61,9 @@ for file_name in sorted_file_names:
 
         instance_name = f'{file_name}, K = {K}'
 
-
         number_of_variables, variance_in_variables, solve_time, total_time = random_orders_eef(I, k=k)
         for i in range(k):
-            df.loc[instance_name, f'random order {i+1}'] = ((number_of_variables[i], variance_in_variables[i], solve_time[i], total_time[i]),)
-
-
-        ### heuristics #! (no heuristics yet for EEF)
+            df.loc[instance_name, f'random order {i+1}'] = (number_of_variables[i], variance_in_variables[i], solve_time[i], total_time[i])
 
 
         ### betweenness centrality
@@ -75,17 +71,19 @@ for file_name in sorted_file_names:
         J.sort(betweenness_centrality(J), change = True)
         solution_BC = EEF(J)
 
-        df.loc[instance_name, 'betweenness centrality'] = ((solution_BC.num_vars, solution_BC.variance, solution_BC.runtime, solution_BC.total_time),)
+        df.loc[instance_name, 'betweenness centrality'] = (solution_BC.num_vars, solution_BC.variance, solution_BC.runtime, solution_BC.total_time)
 
 
-        ### min_HC's #! does not work yet
+        ### min_HC's
         solution_min = EEF(I, method='min')
-        df.loc[instance_name, 'ILP'] = ((solution_min.num_vars, solution_min.variance, solution_min.runtime, solution_min.total_time),)
+        df.loc[instance_name, 'ILP'] = (solution_min.num_vars, solution_min.variance, solution_min.runtime, solution_min.total_time)
 
+
+        ### heuristics #! (no heuristics yet for EEF)
+        # todo
 
         ### write to excel sheet
-        df.to_excel(save_folder + '\\' + 'results EEF 26-08.xlsx')
-
+        df.to_excel(save_folder + '\\' + 'results EEF 01-09.xlsx')
 
 
 
