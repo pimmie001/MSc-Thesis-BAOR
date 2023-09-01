@@ -33,13 +33,13 @@ def floyd_matrix(I, l):
 
 
 
-def REEF(I, method='default'):
+def EEF(I, method='REEF'):
     """
     Solves the KEP using the Reduced Extended Edge Formulation (REEF):
     REEF is the EEF with all 3 variable reductions.
     Uses expression lists
     For d^l to be defined correctly, requires I.K <= I.n
-    method: default: standard variable reductions, min: ILP model, heuristic: TODO
+    method: REEF: standard EEF with variable reductions, min: ILP model, heuristic: TODO
     """
 
     ### create model
@@ -48,7 +48,7 @@ def REEF(I, method='default'):
     m.ModelSense = GRB.MAXIMIZE
 
 
-    if method == 'default': 
+    if method == 'REEF': 
         ### preparations
         I.preparations_EEF() # creates set of arcs I.A
         L = I.n # set L

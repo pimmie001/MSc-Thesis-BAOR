@@ -1,6 +1,6 @@
 import numpy as np
 from HCF.HCF import *
-from EEF.REEF import *
+from EEF.EEF import *
 
 
 def random_orders(I, k = 50):
