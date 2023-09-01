@@ -4,7 +4,10 @@ from EEF.EEF import *
 
 
 def random_orders(I, k = 50):
-    """For k random orders, finds the number of half-cycles and corresponding ILP solve time for this order"""
+    """
+    For k random orders, finds the number of half-cycles and 
+    corresponding ILP solve time for this order.
+    """
     
     number_of_hcs = [] # number of half-cycles
     solve_time = [] # time to solve ILP model
@@ -22,7 +25,10 @@ def random_orders(I, k = 50):
 
 
 def random_orders_eef(I, k = 50):
-    """For k random orders, finds the number and variance of activated variables in EEF model, also returns ILP and total solve time"""
+    """
+    For k random orders, finds the number and variance of activated variables 
+    in reduced EEF model, also returns ILP and total solve time.
+    """
 
     number_of_variables = [] # number of activated variables
     variance_in_variables = [] # variance in number activated variables in graph
@@ -31,7 +37,7 @@ def random_orders_eef(I, k = 50):
 
     for _ in range(k):
         I.change_order(np.random.permutation(I.n))
-        solution = REEF(I)
+        solution = EEF(I, method='REEF')
 
         number_of_variables.append(solution.num_vars)
         variance_in_variables.append(solution.variance)
