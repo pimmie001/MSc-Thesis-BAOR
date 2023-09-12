@@ -50,7 +50,7 @@ def min_eef(I, time_limit=None):
     varcount = 0
     for l in range(I.n):
         for (i,j) in I.A:
-            y = m.addVar(vtype=GRB.BINARY, obj = 1)
+            y = m.addVar(vtype=GRB.BINARY, obj = 1, name = f'y^{l}_{i},{j}')
             yvars.append(y)
             dict_y[(l,i,j)] = varcount
             varcount += 1
@@ -61,7 +61,7 @@ def min_eef(I, time_limit=None):
     varcount = 0
     for l in range(I.n):
         for k in range(len(C)):
-            z = m.addVar(vtype=GRB.BINARY, obj = 0)
+            z = m.addVar(vtype=GRB.BINARY, obj = 0, name = f'z^{l}_{k}')
             zvars.append(z)
             dict_z[(l,k)] = varcount
             varcount += 1
