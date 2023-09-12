@@ -90,7 +90,7 @@ def min_eef(I, time_limit=None):
 
 
     ### solve model
-    m.write("min_eef.lp")
+    # m.write("min_eef.lp")
     m.setParam('OutputFlag', False)
     m.setParam('TimeLimit', time_limit)
     m.optimize()
@@ -110,9 +110,6 @@ def min_eef(I, time_limit=None):
     solution.zvalues = [x.X for x in zvars]
     solution.dict_y = dict_y
     solution.dict_z = dict_z
-
-    # print(solution.yvalues)
-    # print(solution.obj)
 
     return solution
 
