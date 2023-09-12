@@ -38,8 +38,8 @@ def EEF(I, method='REEF'):
     Given instance I, solves the KEP using the Extended Edge Formulation (EEF)
     method: 
             REEF: EEF with all 3 variable reductions (uses expression lists)
-                for d^l to be defined correctly for REEF, requires I.K <= I.n
-            min: ILP model
+                note: for d^l to be defined correctly for REEF, requires I.K <= I.n
+            min: ILP model to find minimum number of variables
             heuristic: TODO
     """
 
@@ -50,7 +50,7 @@ def EEF(I, method='REEF'):
     m.ModelSense = GRB.MAXIMIZE
 
 
-    if method == 'REEF': 
+    if method == 'REEF': # ordered instance
         ### preparations
         I.preparations_EEF() # creates set of arcs I.A
         L = I.n # set L
@@ -109,7 +109,7 @@ def EEF(I, method='REEF'):
             m.addConstr(sum(arcs_out_tot[i]) <= 1) # 9c
 
 
-    else:
+    else: # unordered instance
         ### preparations
         if method == 'min':
             min_eef_solution = min_eef(I)
