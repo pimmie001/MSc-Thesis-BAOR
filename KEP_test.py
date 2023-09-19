@@ -13,19 +13,23 @@ from EEF.EEF import EEF
 
 
 
-# path = 'Instances/DGGKMPT/50-6.json'
-# # path = 'Instances/small/genjson-0.json'
-# K = 4
-# I = KEP_instance()
-# I.build_json_instance(path, K)
+path = 'Instances/DGGKMPT/50-0.json'
 
-# sol1 = EEF(I, method='min')
+for K in range(2,5):
+    for x in range(0, 10):
+        path = f'Instances/DGGKMPT/100-{str(x)}.json'
 
-# print(f'sol1: {sol1.obj, sol1.runtime, sol1.total_time}')
+        I = KEP_instance()
+        I.build_json_instance(path, K)
+
+        sol1 = EEF(I, method='REEF')
+        sol2 = EEF(I, method='min')
+
+        print(sol1.obj, sol2.obj)
+        if sol1.obj != sol2.obj:
+            print(K, path)
 
 
-# sol2.check_feasibility()
-# sol2.print_feasibility()
 
 
 # solution1 = min_eef(I, version = 1)
@@ -83,15 +87,16 @@ from EEF.EEF import EEF
 
 ################################################################
 
-nodes = ['A', 'B', 'C', 'D']
-arcs = [('A','B'), ('B','D'), ('D','C'), ('C','A'), ('B','C'), ('C','B')]
-K = 3
+# nodes = ['A', 'B', 'C', 'D']
+# arcs = [('A','B'), ('B','D'), ('D','C'), ('C','A'), ('B','C'), ('C','B')]
+# K = 3
 
-I = KEP_instance()
-I.build_instance(arcs, nodes, K)
+# I = KEP_instance()
+# I.build_instance(arcs, nodes, K)
 
-sol1 = EEF(I, method='min')
-print(f'sol1: {sol1.obj, sol1.runtime, sol1.total_time}')
+# sol1 = EEF(I, method='min')
+# print(f'sol1: {sol1.obj, sol1.runtime, sol1.total_time}')
+# print(sol1.variance)
 
 # print(f'sol1: {sol1.obj, sol1.time_build_model, sol1.runtime}')
 # print(f'sol2: {sol2.obj, sol2.time_build_model, sol2.runtime}')
