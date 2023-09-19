@@ -71,7 +71,7 @@ def min_eef(I, time_limit=None):
     # (1) all cycles must be made in at least one copy
     for k in range(len(C)):
         LHS = []
-        for l in range(I.n):
+        for l in C[k]:
             LHS.append(zvars[dict_z[(l,k)]])
         m.addConstr(sum(LHS) >= 1)
 
