@@ -179,7 +179,7 @@ def HCF(I, method = "enumerate"):
             if left[i][j] or right[i][j]:
                 m.addConstr(sum(left[i][j]) == sum(right[i][j]))
 
-    # constraint (8): #! TODO: find better constraints
+    # constraint (8): #! K odd and unordered instance
     if odd_K and not ordered_instance:
         indices_K = [i for i in range(len(H)) if len(H[i]) == I.K]
         for i in range(len(indices_K)):
