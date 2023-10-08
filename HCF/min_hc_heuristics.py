@@ -297,20 +297,3 @@ def heuristic3(I):
 
     return solution
 
-
-###########################################
-# def small_check(M, indices):
-#     for i in range(len(M)):
-#         included = False
-#         for j in range(len(M[i])):
-#             if M[i][j][0] in indices and M[i][j][1] in indices:
-#                 included = True
-#                 break
-
-#         if not included:
-#             print(M[i])
-#             print(indices)
-#             return False
-
-#     return True
-# 
