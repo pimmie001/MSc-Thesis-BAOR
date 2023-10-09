@@ -13,21 +13,66 @@ from EEF.EEF import EEF
 
 
 
+nodes = ['A', 'B', 'C', 'D']
+arcs = [('A','B'), ('B','D'), ('D','C'), ('C','A'), ('B','C'), ('C','B')]
+K = 3
+
+I = KEP_instance()
+I.build_instance(arcs, nodes, K)
+
+###
+
 path = 'Instances/DGGKMPT/50-0.json'
 
-for K in range(2,5):
-    for x in range(0, 10):
-        path = f'Instances/DGGKMPT/100-{str(x)}.json'
+I = KEP_instance()
+I.build_json_instance(path, 3)
 
-        I = KEP_instance()
-        I.build_json_instance(path, K)
 
-        sol1 = EEF(I, method='REEF')
-        sol2 = EEF(I, method='min')
+########################
 
-        print(sol1.obj, sol2.obj)
-        if sol1.obj != sol2.obj:
-            print(K, path)
+I.build_graph()
+closeness = nx.closeness_centrality(I.G)
+
+
+
+# Calculate shortest paths
+shortest_paths = dict(nx.all_pairs_shortest_path_length(I.G))
+print(shortest_paths)
+
+def closeness_v(v):
+    total = 0
+    for u in range(I.n):
+        total += shortest_paths[v].get(u, I.n)
+    return (I.n-1)/total
+
+def my_closeness():
+    return [closeness_v(v) for v in range(I.n)]
+
+closeness2 = my_closeness()
+
+closeness1 = [closeness[i] for i in range(I.n)]
+print(np.argsort(closeness1))
+print(np.argsort(closeness2))
+
+# print(np.argsort(closeness2))
+
+
+
+
+
+# for K in range(2,5):
+#     for x in range(0, 10):
+#         path = f'Instances/DGGKMPT/100-{str(x)}.json'
+
+#         I = KEP_instance()
+#         I.build_json_instance(path, K)
+
+#         sol1 = EEF(I, method='REEF')
+#         sol2 = EEF(I, method='min')
+
+#         print(sol1.obj, sol2.obj)
+#         if sol1.obj != sol2.obj:
+#             print(K, path)
 
 
 
