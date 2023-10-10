@@ -1,6 +1,3 @@
-
-#! not necessarily for HCF only
-
 import networkx as nx
 import numpy as np
 
@@ -56,10 +53,6 @@ def closeness_centrality(I):
 
     return closeness
 
-    #! old closeness centrality: 
-    # closeness = nx.closeness_centrality(I.G)
-    # return [closeness[i] for i in range(I.n)]
-
 
 
 def betweenness_centrality(I):
@@ -109,15 +102,4 @@ def betweenness_centrality_K(I): # does not seem to work better than betweenness
                         betweenness_K[l] += count / len(paths)
 
     return betweenness_K
-
-    #! OLD CODE: 
-    # all_paths = dict(nx.all_pairs_shortest_path(I.G, cutoff = I.K))
-
-    # for source in all_paths:
-    #     for target in all_paths[source]:
-    #         path = all_paths[source][target]
-    #         for node in path[1:-1]:
-    #             betweenness_K[node] += 1
-
-    # return betweenness_K
 
