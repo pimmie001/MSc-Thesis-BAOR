@@ -79,7 +79,7 @@ def get_half_cycles(I):
 
 
 
-def HCF(I, method = "enumerate"):
+def HCF(I, method = "enumerate", get_variable_count = False):
     """
     Given instance I, solves the KEP using the HCF
     method:
@@ -88,6 +88,7 @@ def HCF(I, method = "enumerate"):
         heuristic: will find a heuristic solution for the minimum number of half-cycles to complete each cycle
     
     Returns a solution containing information such as runtime (including time for preparations), number of variables etc. 
+    If get_variable_count is true, will only return number of half-cycles.
     ! When K is odd, uses extra constraints to prevent two half-cycles forming a cycle of length K+1
     """
 
@@ -116,6 +117,9 @@ def HCF(I, method = "enumerate"):
         solution.solution_hc = solution_hc # this gives info on how good solution_hc performed
 
     time_find_H = time.time() - start_find_H
+
+    if get_variable_count:
+        return len(H)
 
 
     odd_K = I.K % 2 == 1 # important for constraints
