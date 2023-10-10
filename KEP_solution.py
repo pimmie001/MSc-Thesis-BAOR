@@ -26,8 +26,9 @@ class KEP_solution:
             self.feasibility = self.check_feasibility_CF()
         elif self.formulation == 'HCF':
             self.feasibility = self.check_feasibility_HCF()
-        elif self.formulation == 'EEF' or self.formulation == 'REEF':
-            self.feasibility = self.check_feasibility_EEF()
+        # elif self.formulation == 'EEF':
+        #! DOES NOT WORK
+        #     self.feasibility = self.check_feasibility_EEF()
 
 
     def check_feasibility_CF(self):
@@ -120,8 +121,9 @@ class KEP_solution:
         return True
 
 
+    #! NEEDS UPDATE
     def check_feasibility_EEF(self):
-        """Checks feasibility of the (reduced) extended edge formulation (R)EEF solution"""
+        """Checks feasibility of the EEF solution"""
 
         ### extract solution from xvalues
         if self.formulation == 'EEF':

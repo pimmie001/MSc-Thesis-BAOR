@@ -178,7 +178,7 @@ def EEF(I, method='REEF'):
 
     ### return solution
     solution = KEP_solution(I)
-    solution.formulation = f'EEF.{method}'
+    solution.formulation = f'EEF'
     solution.optimality = m.Status == GRB.OPTIMAL
     solution.obj = m.ObjVal
     solution.num_constrs = m.NumConstrs
@@ -189,6 +189,7 @@ def EEF(I, method='REEF'):
 
     ## to extract cycles and perform feasiblity check:
     solution.xvalues = [x.X for x in vars]
+    print(solution.xvalues)
     solution.arc_to_index = arc_to_index
 
     ## for comparison
