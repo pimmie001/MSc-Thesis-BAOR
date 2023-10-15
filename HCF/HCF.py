@@ -79,7 +79,7 @@ def get_half_cycles(I):
 
 
 
-def HCF(I, method = "enumerate", get_variable_count = False):
+def HCF(I, method = "enumerate", get_variable_count = False, time_limit = None, time_limit_min = None):
     """
     Given instance I, solves the KEP using the HCF
     method:
@@ -105,7 +105,12 @@ def HCF(I, method = "enumerate", get_variable_count = False):
         ordered_instance = True
     else:
         if method == "min":
-            solution_hc = min_hc(I)
+            try:
+                solution_hc = min_hc(I, time_limit=time_limit_min)
+            except:
+                return None
+            if not solution_hc.optimality:
+                return None
         elif method == "heuristic":
             solution_hc = heuristic(I)
         elif method == "heuristic2":
@@ -196,6 +201,8 @@ def HCF(I, method = "enumerate", get_variable_count = False):
 
     ### solve model
     # m.write("HCF.lp")
+    if time_limit:
+        m.setParam('TimeLimit', time_limit)
     m.setParam('OutputFlag', False)
     m.optimize()
 

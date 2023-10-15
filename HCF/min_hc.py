@@ -88,8 +88,6 @@ def min_hc(I, time_limit=None):
 
     ##### Preparations
     M, c2i, H_full = determine_requirements(I)
-    if time_limit is None:
-        time_limit = 600
 
 
     ##### The ILP model
@@ -136,8 +134,9 @@ def min_hc(I, time_limit=None):
 
     ### solve model
     # m.write("min_hc.lp")
+    if time_limit:
+        m.setParam('TimeLimit', time_limit)
     m.setParam('OutputFlag', False)
-    m.setParam('TimeLimit', time_limit)
     m.optimize()
 
 

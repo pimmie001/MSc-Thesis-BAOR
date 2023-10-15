@@ -2,22 +2,21 @@ import networkx as nx
 import numpy as np
 
 
-def degree(I, Type = 'tot'):
-    """
-    Returns the degree of the nodes
-    Type:   tot: total degree,   in: incoming degree,   out: outgoing degree
-    """
+def degree(I):
+    # Returns the (total) degree of the nodes
+    I.make_pred_list()
+    return [len(I.pred_list[i]) + len(I.adj_list[i]) for i in range(I.n)]
 
-    if Type == 'tot':
-        I.make_pred_list()
-        degree = [len(I.pred_list[i]) + len(I.adj_list[i]) for i in range(I.n)]
-    elif Type == 'in':
-        I.make_pred_list()
-        degree = [len(I.pred_list[i]) for i in range(I.n)]
-    elif Type == 'out':
-        degree = [len(I.adj_list[i]) for i in range(I.n)]
 
-    return degree
+def in_degree(I):
+    # Returns the in-degree of the nodes
+    I.make_pred_list()
+    return [len(I.pred_list[i]) for i in range(I.n)]
+
+
+def out_degree(I):
+    # Returns the out-degree of the nodes
+    return [len(I.adj_list[i]) for i in range(I.n)]
 
 
 
@@ -33,7 +32,6 @@ def floyd(I):
                 floyd[j,k] = min(floyd[j,k], floyd[j,i] + floyd[i,k])
 
     return floyd
-
 
 
 def closeness_centrality(I):
