@@ -21,6 +21,7 @@ def out_degree(I):
 
 
 def floyd(I):
+    """return floyd matrix given instance I"""
     floyd = np.full((I.n, I.n), float('inf')) # initialize matrix
     for i in I.adj_list:
         for j in I.adj_list[i]:
@@ -36,7 +37,7 @@ def floyd(I):
 
 def closeness_centrality(I):
     """
-    Returns the "Harmony Centrality Index" (modified version of closeness centrality for unconnected graphs)/
+    Returns the "Harmony Centrality Index" (modified version of closeness centrality for unconnected graphs)
     The Harmony Centrality Index of node i is the sum (over all j != i) of the recipicle of the distance from i to j.
     """
 
