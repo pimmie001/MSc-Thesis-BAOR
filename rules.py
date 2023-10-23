@@ -67,7 +67,7 @@ def betweenness_centrality(I):
 
 
 
-def betweenness_centrality_K(I): # does not seem to work better than betweenness centrality for HCF
+def betweenness_centrality_K(I):
     """
     Returns the betweenness-K centrality of all nodes.
     The betweenness centrality of node l is the sum (over pairs (i,j)) of the ratio of the number of paths i to j of size K 
