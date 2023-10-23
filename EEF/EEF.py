@@ -189,12 +189,12 @@ def EEF(I, method='REEF'):
 
     ## to extract cycles and perform feasiblity check:
     solution.xvalues = [x.X for x in vars]
-    print(solution.xvalues)
     solution.arc_to_index = arc_to_index
 
     ## for comparison
     solution.num_vars = m.NumVars
-    solution.variance = np.var([x for x in nvars if x > 0]) # variance of number of activated variables in graphs
+    solution.variance1 = np.var([x for x in nvars]) # variance of number of activated variables in graphs
+    solution.variance2 = np.var([x for x in nvars if x > 0]) # variance of number of activated variables in graphs only considering graphs with at least one variable
     solution.time_build_model = build_model # building time
     solution.runtime = m.Runtime # solving time
     solution.total_time = build_model + m.Runtime # total time
