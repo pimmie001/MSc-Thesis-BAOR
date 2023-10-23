@@ -33,7 +33,7 @@ def floyd_matrix(I, l):
 
 
 
-def EEF(I, method='REEF'):
+def EEF(I, method='REEF', get_variable_count=False):
     """
     Given instance I, solves the KEP using the Extended Edge Formulation (EEF)
     method: 
@@ -75,6 +75,10 @@ def EEF(I, method='REEF'):
                 arc_to_index[(l,i,j)] = var_count
                 var_count += 1
             nvars.append(len(A_l[l]))
+
+
+        if get_variable_count:
+            return var_count
 
 
         ### constrains
@@ -133,6 +137,10 @@ def EEF(I, method='REEF'):
                     var_count += 1
                     var_count_l += 1
             nvars.append(var_count_l)
+
+
+        if get_variable_count:
+            return var_count
 
 
         ### constraints #! improve performance
