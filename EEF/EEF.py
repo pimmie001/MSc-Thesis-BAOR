@@ -191,7 +191,6 @@ def EEF(I, method='REEF'):
 
     ## to extract cycles and perform feasiblity check:
     solution.xvalues = [x.X for x in vars]
-    print(solution.xvalues)
     solution.arc_to_index = arc_to_index
 
     ## for comparison
