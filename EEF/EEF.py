@@ -33,7 +33,7 @@ def floyd_matrix(I, l):
 
 
 
-def EEF(I, method='REEF'):
+def EEF(I, method='REEF', get_variable_count=False):
     """
     Given instance I, solves the KEP using the Extended Edge Formulation (EEF)
     method: 
@@ -78,6 +78,10 @@ def EEF(I, method='REEF'):
                 arc_to_index[(l,i,j)] = var_count
                 var_count += 1
             nvars.append(len(A_l[l]))
+
+
+        if get_variable_count:
+            return var_count
 
 
         ### constrains
@@ -138,6 +142,10 @@ def EEF(I, method='REEF'):
             nvars.append(var_count_l)
 
 
+        if get_variable_count:
+            return var_count
+
+
         ### constraints #! improve performance
         # 7b
         for l in range(I.n):
@@ -195,7 +203,8 @@ def EEF(I, method='REEF'):
 
     ## for comparison
     solution.num_vars = m.NumVars
-    solution.variance = np.var([x for x in nvars if x > 0]) # variance of number of activated variables in graphs
+    solution.variance1 = np.var([x for x in nvars]) # variance of number of activated variables in graphs
+    solution.variance2 = np.var([x for x in nvars if x > 0]) # variance of number of activated variables in graphs only considering graphs with at least one variable
     solution.time_build_model = build_model # building time
     solution.runtime = m.Runtime # solving time
     solution.total_time = build_model + m.Runtime # total time
