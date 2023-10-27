@@ -48,6 +48,7 @@ def EEF(I, method='REEF'):
     start_build = time.time()
     m = gp.Model('KEP REEF')
     m.ModelSense = GRB.MAXIMIZE
+    m.setParam('OutputFlag', False)
     m.setParam('Threads', 1)
     m.setParam('MemLimit', 28)
 
@@ -174,7 +175,6 @@ def EEF(I, method='REEF'):
 
     ### solve model
     # m.write(f"EEF.{method}.lp")
-    m.setParam('OutputFlag', False)
     m.optimize()
 
 
