@@ -48,6 +48,8 @@ def EEF(I, method='REEF'):
     start_build = time.time()
     m = gp.Model('KEP REEF')
     m.ModelSense = GRB.MAXIMIZE
+    m.setParam('Threads', 1)
+    m.setParam('MemLimit', 28)
 
 
     if method == 'REEF': # ordered instance

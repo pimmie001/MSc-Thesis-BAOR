@@ -136,6 +136,8 @@ def HCF(I, method = "enumerate", get_variable_count = False, time_limit = None, 
     m = gp.Model('KEP HCF')
     # gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
     m.ModelSense = GRB.MAXIMIZE
+    m.setParam('Threads', 1)
+    m.setParam('MemLimit', 28)
 
 
     ### variables
