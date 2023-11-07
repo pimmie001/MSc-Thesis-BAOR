@@ -37,10 +37,13 @@ def EEF(I, method='REEF', get_variable_count=False):
     """
     Given instance I, solves the KEP using the Extended Edge Formulation (EEF)
     method: 
-            REEF: EEF with all 3 variable reductions (uses expression lists)
+            REEF: EEF with all 3 variable reductions
                 note: for d^l to be defined correctly for REEF, requires I.K <= I.n
             min: ILP model to find minimum number of variables
             heuristic: TODO
+
+    Returns a solution containing information such as runtime (including time for preparations), number of variables etc. 
+    If get_variable_count is true, will only return number of activated variables in EEF.
     """
 
 
@@ -126,6 +129,7 @@ def EEF(I, method='REEF', get_variable_count=False):
 
         ### variables and objective
         vars = []
+        vars_arcs = []
         arc_to_index = {}
         var_count = 0
 
@@ -136,6 +140,7 @@ def EEF(I, method='REEF', get_variable_count=False):
                 if min_eef_solution.yvalues[min_eef_solution.dict_y[(l,i,j)]] > 0.5:
                     x = m.addVar(vtype = GRB.BINARY, obj = 1, name = f'x^{l}_{i},{j}')
                     vars.append(x)
+                    vars_arcs.append((l,i,j))
                     arc_to_index[(l,i,j)] = var_count
                     var_count += 1
                     var_count_l += 1
@@ -146,35 +151,32 @@ def EEF(I, method='REEF', get_variable_count=False):
             return var_count
 
 
-        ### constraints #! improve performance
-        # 7b
+        ## constraints (with expression lists)
+        arcs_in = [[[] for _ in range(I.n)] for _ in range(I.n)] # arcs going in (constraint 9b)
+        arcs_out = [[[] for _ in range(I.n)] for _ in range(I.n)] # arcs going out (constraint 9b, 9e)
+        arcs_out_tot = [[] for _ in range(I.n)] # arcs going out over all copies l (constraint 9c)
+        max_size = [[] for _ in range(I.n)] # max cycle length (constraint 9d)
+        arcs_out_l = [[] for _ in range(I.n)] # RHS only depends on l (constraint 9e)
+
+        ## add variables to expression lists
+        for (l,i,j) in vars_arcs:
+            x = vars[arc_to_index[(l,i,j)]] # x^l_ij
+
+            arcs_in[l][j].append(x)
+            arcs_out[l][i].append(x)
+            arcs_out_tot[i].append(x)
+            max_size[l].append(x)
+            if i == l: arcs_out_l[l].append(x)
+
+        ## add constraints to model
         for l in range(I.n):
+            if max_size[l]: m.addConstr(sum(max_size[l]) <= I.K) # 9d
             for i in range(I.n):
-                arcs_in = []
-                arcs_out = []
-                for j in range(I.n):
-                    if (l,j,i) in arc_to_index:
-                        arcs_in.append(vars[arc_to_index[(l,j,i)]])
-                    if (l,i,j) in arc_to_index:
-                        arcs_out.append(vars[arc_to_index[(l,i,j)]])
-                m.addConstr(sum(arcs_in) == sum(arcs_out))
+                if arcs_in[l][i] or arcs_out[l][i]: m.addConstr(sum(arcs_in[l][i]) == sum(arcs_out[l][i])) # 9b
+                if arcs_out[l][i] or arcs_out_l[l]: m.addConstr(sum(arcs_out[l][i]) <= sum(arcs_out_l[l])) # 9e
 
-        # 7c
         for i in range(I.n):
-            arcs_out_l = []
-            for l in range(I.n):
-                for j in range(I.n):
-                    if (l,i,j) in arc_to_index:
-                        arcs_out_l.append(vars[arc_to_index[(l,i,j)]])
-            m.addConstr(sum(arcs_out_l) <= 1)
-
-        # 7d
-        for l in range(I.n):
-            arcs = []
-            for (i,j) in I.A:
-                if (l,i,j) in arc_to_index:
-                    arcs.append(vars[arc_to_index[(l,i,j)]])
-            m.addConstr(sum(arcs) <= I.K)
+            m.addConstr(sum(arcs_out_tot[i]) <= 1) # 9c
 
 
     ### end building model
@@ -188,7 +190,7 @@ def EEF(I, method='REEF', get_variable_count=False):
 
     ### return solution
     solution = KEP_solution(I)
-    solution.formulation = f'EEF'
+    solution.formulation = 'EEF'
     solution.optimality = m.Status == GRB.OPTIMAL
     solution.obj = m.ObjVal
     solution.num_constrs = m.NumConstrs
