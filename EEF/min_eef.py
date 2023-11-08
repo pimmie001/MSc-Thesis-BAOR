@@ -76,13 +76,13 @@ def min_eef(I, time_limit=None):
         m.addConstr(sum(LHS) >= 1)
 
 
-    # (2) y^l_ij = 1 for all (i,j) in C_k, l, k such that z^l_k = 1
+    # (2) y^l_ij = 1 for all (i,j) in C_k, for all l, k such that z^l_k = 1
     for k in range(len(C)):
         for l in range(I.n):
             for (i,j) in arcs_in_cycle(C[k]):
                 m.addConstr(yvars[dict_y[(l,i,j)]] >= zvars[dict_z[(l,k)]])
 
-    # # alternative for constraint (2) but was much slower
+    # # alternative for constraint (2)   (is slower)
     # for k in range(len(C)):
     #     for l in range(I.n):
     #         m.addConstr(sum([yvars[dict_y[(l,i,j)]] for (i,j) in arcs_in_cycle(C[k])]) >= len(C[k]) * zvars[dict_z[(l,k)]])
