@@ -1,61 +1,78 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from copy import deepcopy
+import itertools as it
 
 from HCF.HCF import HCF
 from HCF.min_hc import *
 from HCF.min_hc_heuristics import *
-from HCF.rules import *
+from rules import *
 from CYCLE.CF import *
 from random_orders import random_orders
 from EEF.EEF import EEF
 
 
 
+# example HCF
+# nodes = ['A', 'B', 'C', 'D']
+# arcs = [('A','B'), ('B','D'), ('D','C'), ('C','A'), ('B','C'), ('C','B')]
+# K = 3
 
-nodes = ['A', 'B', 'C', 'D']
-arcs = [('A','B'), ('B','D'), ('D','C'), ('C','A'), ('B','C'), ('C','B')]
-K = 3
+# # own example EEF
+# nodes = ['A', 'B', 'C', 'D']
+# # nodes = ['B', 'C', 'D', 'A']
+# arcs = [('A','B'), ('B','C'), ('B','D'), ('C','A'), ('C','B'), ('D','C')]
 
-I = KEP_instance()
-I.build_instance(arcs, nodes, K)
+# K = 4
+
+## example centrality measures
+# nodes = list(range(1,6))
+# arcs = [(1,2), (1,3), (2,3), (3,4), (2,4), (4,5)]
+# K = 2
+
+# I = KEP_instance()
+# I.build_instance(arcs, nodes, K)
+
+# measure = betweenness_centrality(I)
+# print(measure)
+# print()
+# J = deepcopy(I)
+# J.sort(measure, change=True)
+# print(betweenness_centrality(J))
+# print(HCF(I, 'min'))
+
+
+
+# K = 4
+# path = r"C:\Users\pimvk\Documents\Code projects\Code BAOR Thesis\Instances\Small"
+# I = KEP_instance()
+# I.build_json_instance(path + '\\genjson-6.json', K)
+
+
+# for _ in range(20):
+#     I.change_order(np.random.permutation(I.n))
+#     print(EEF(I, get_variable_count=True))
+# print()
+# print(EEF(I, method='min', get_variable_count=True))
+
+
 
 ###
 
-path = 'Instances/DGGKMPT/50-0.json'
+# path = 'Instances/DGGKMPT/100-5.json'
+# # path = 'Instances/small/genjson-6.json'
 
-I = KEP_instance()
-I.build_json_instance(path, 3)
+# I = KEP_instance()
+# I.build_json_instance(path, 4)
+
+# sol = EEF(I)
+
+# print(sol.time_build_model)
+# print(sol.runtime)
+# print(sol.obj)
 
 
 ########################
-
-I.build_graph()
-closeness = nx.closeness_centrality(I.G)
-
-
-
-# Calculate shortest paths
-shortest_paths = dict(nx.all_pairs_shortest_path_length(I.G))
-print(shortest_paths)
-
-def closeness_v(v):
-    total = 0
-    for u in range(I.n):
-        total += shortest_paths[v].get(u, I.n)
-    return (I.n-1)/total
-
-def my_closeness():
-    return [closeness_v(v) for v in range(I.n)]
-
-closeness2 = my_closeness()
-
-closeness1 = [closeness[i] for i in range(I.n)]
-print(np.argsort(closeness1))
-print(np.argsort(closeness2))
-
-# print(np.argsort(closeness2))
-
 
 
 
@@ -95,12 +112,16 @@ print(np.argsort(closeness2))
 
 ################################################################
 
-# path = 'Instances/DGGKMPT/200-1.json'
-# K = 4
-# I = KEP_instance()
-# I.build_json_instance(path, K)
+# path = 'Instances/DGGKMPT/100-1.json'
+path ='Instances/Small/genjson-0.json'
+K = 4
+I = KEP_instance()
+I.build_json_instance(path, K)
 
-# solution = HCF(I)
+solution = EEF(I, "heuristic")
+print(solution.obj)
+
+# print(get_cycles(I))
 
 # solution2 = HCF(I, method = "min")
 
@@ -116,18 +137,6 @@ print(np.argsort(closeness2))
 # # print(f"value min {solution2.LB}")
 # # print(f"value heuristic {solution3.LB}")
 
-# df = pd.DataFrame(index = ['enumeration', 'min', 'heuristic', 'heuristic2', 'rule'], columns = ['obj', 'time H', 'time build model', 'time solve model', 'total time'])
-
-
-
-# df.loc['enumeration']   = [solution.LB, solution.time_find_H, solution.time_build_model, solution.runtime, solution.time_find_H + solution.time_build_model + solution.runtime]
-# df.loc['min']           = [solution2.LB, solution2.time_find_H, solution2.time_build_model, solution2.runtime, solution2.time_find_H + solution2.time_build_model + solution2.runtime]
-# df.loc['heuristic']     = [solution3.LB, solution3.time_find_H, solution3.time_build_model, solution3.runtime, solution3.time_find_H + solution3.time_build_model + solution3.runtime]
-# df.loc['heuristic2']    = [solution5.LB, solution5.time_find_H, solution5.time_build_model, solution5.runtime, solution5.time_find_H + solution5.time_build_model + solution5.runtime]
-# df.loc['rule']          = [solution4.LB, solution4.time_find_H, solution4.time_build_model, solution4.runtime, solution4.time_find_H + solution4.time_build_model + solution4.runtime]
-
-# print('\n')
-# print(df)
 
 
 ################################################################
@@ -148,36 +157,3 @@ print(np.argsort(closeness2))
 
 # sol2.check_feasibility()
 # sol2.print_feasibility()
-
-
-################################################################
-
-# # HCF
-# solution_hcf = HCF(I)
-
-# # Heuristic
-# solution_hc = heuristic(I)
-# solution_heur = HCF2(solution_hc)
-
-# # Min # of half-cycles
-# solution_hc2 = min_hc(I)
-# solution_hcf2 = HCF2(solution_hc2)
-
-# # Rule
-# J = KEP_instance()
-# J.build_json_instance(path, K)
-# measure = betweenness_centrality(J)
-# J.sort(measure, 'desc', change=True)
-# solution_rule = HCF(J)
-
-# print('\n\n')
-# print(f'solution HCF: {solution_hcf.runtime}')
-# print(f'solution heuristic: {solution_heur.runtime}')
-# print(f'solution HCF2 min hc: {solution_hcf2.runtime}')
-# print(f'solution rule: {solution_rule.runtime}\n')
-
-# print(len(get_half_cycles(I)))
-# print(len(solution_hc.indices))
-# print(len(solution_hc2.indices))
-# print(len(get_half_cycles(J)))
-
