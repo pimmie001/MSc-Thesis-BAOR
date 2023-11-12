@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from KEP_instance import *
 from KEP_solution import *
 from EEF.min_eef import min_eef
-
+from EEF.min_eef_heuristics import *
 
 
 
@@ -124,7 +124,9 @@ def EEF(I, method='REEF', get_variable_count=False):
         if method == 'min':
             min_eef_solution = min_eef(I)
         elif method == 'heuristic':
-            pass # todo
+            min_eef_solution = heuristic_eef(I)
+        else: # other heuristic ?
+            pass
 
 
         ### variables and objective

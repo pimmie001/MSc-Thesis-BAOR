@@ -66,11 +66,9 @@ def heuristic_eef(I):
 
         ## activate variables corresponding to cycle
         for cycle in C_i:
-            print(cycle)
-            for (i,j) in arcs_in_cycle(cycle):
-                print(i,j)
-                Y[(l,i,j)] = 1
-            print('\n')
+            for (a,b) in arcs_in_cycle(cycle):
+                Y[(l,a,b)] = 1
+
 
         l += 1
 
@@ -85,32 +83,22 @@ def heuristic_eef(I):
 
     varcount1 = 0
     varcount2 = 0
+
     for l in range(I.n):
         for (i,j) in I.A:
-            if Y[(l,i,j)]:
-                print(l,i,j)
-            solution.yvalues.append(Y[(l,i,j)])
             solution.dict_y[(l,i,j)] = varcount1
+            solution.yvalues.append(Y[(l,i,j)])
+            varcount1 += 1
         for k in range(len(C)):
-            if Z[(l,k)]:
-                print(l,k)
+            solution.dict_z[(l,k)] = varcount2
             solution.zvalues.append(Z[(l,k)])
-            solution.dict_z[(l,i,j)] = varcount2
+            varcount2 += 1
 
-    # solution.dict_z = Z
-    # solution.dict_y = Y
-
-    # for l in range(I.n):
-    #     for (i,j) in I.A:
-    #         # print((l,i,j),': ', Y[(l,i,j)])
-    #         solution.yvalues.append(Y[(l,i,j)])
-    #         solution.dict_y[(l,i,j)] = varcount1
-    #     for k in range(len(C)):
-    #         solution.zvalues.append(Z[(l,k)])
-    #         solution.dict_z[(l,i,j)] = varcount2
-    #         # print((l,k),': ', Z[(l,k)])
-
+    print(solution.yvalues)
+    print(solution.zvalues)
+    print(solution.dict_y)
+    print(solution.dict_z)
+    print()
 
     return solution
-
 
