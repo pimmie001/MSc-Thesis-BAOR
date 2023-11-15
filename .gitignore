@@ -1,8 +1,14 @@
+# python
 **/.vscode/
 **/__pycache__/
 **/.ipynb_checkpoints/
+
+# notebooks
 *.ipynb
-**/Logfiles/
+
+# .lp / .rlp files
 *.lp
 *.rlp
+
+# test files
 **/test*
