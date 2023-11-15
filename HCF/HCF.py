@@ -134,7 +134,6 @@ def HCF(I, method = "enumerate", get_variable_count = False, time_limit = None, 
     start_build_model = time.time()
 
     m = gp.Model('KEP HCF')
-    # gp.setParam('LogFile', 'Logfiles/gurobi_hcf.log')
     m.ModelSense = GRB.MAXIMIZE
     m.setParam('OutputFlag', False)
     m.setParam('Threads', 1)

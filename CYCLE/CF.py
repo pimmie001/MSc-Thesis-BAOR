@@ -66,7 +66,6 @@ def CF(I):
 
     ### create model
     m = gp.Model(f'KEP cycle formulation {I.filename}')
-    gp.setParam('LogFile', 'Logfiles/gurobi_cf.log')
     m.ModelSense = GRB.MAXIMIZE
 
     ### variables
