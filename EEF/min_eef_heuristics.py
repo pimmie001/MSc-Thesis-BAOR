@@ -28,7 +28,11 @@ def count_nodes(n, C, exclude):
 
 
 def heuristic_eef(I):
-    """Heuristic solution for finding minimum number of activated variables in the EEF"""
+    """
+    Heuristic solution for finding minimum number of activated variables in the EEF.
+    Finds most common node in cycles that are not yet added, adds the arcs in the cycles
+    that contain this node. Repeat process until all cycles are added.
+    """
 
     ### preparations
     C = get_cycles(I)
@@ -47,11 +51,10 @@ def heuristic_eef(I):
 
     ### main loop
     added = set()
-    l = 0 # number of copy
     while len(added) < len(C): # all cycles need to be able to be made
         ## find most common node left
         count = count_nodes(I.n, C, added) # count occurences of nodes
-        j = np.argmax(count)
+        l = np.argmax(count)
 
 
         ## find which cycles include this node
@@ -59,7 +62,7 @@ def heuristic_eef(I):
         for i,cycle in enumerate(C):
             if i in added:
                 continue
-            if j in cycle:
+            if l in cycle:
                 added.add(i)
                 C_i.append(cycle)
                 Z[(l,i)] = 1
@@ -68,9 +71,6 @@ def heuristic_eef(I):
         for cycle in C_i:
             for (a,b) in arcs_in_cycle(cycle):
                 Y[(l,a,b)] = 1
-
-
-        l += 1
 
 
     ### return solution
@@ -93,12 +93,6 @@ def heuristic_eef(I):
             solution.dict_z[(l,k)] = varcount2
             solution.zvalues.append(Z[(l,k)])
             varcount2 += 1
-
-    print(solution.yvalues)
-    print(solution.zvalues)
-    print(solution.dict_y)
-    print(solution.dict_z)
-    print()
 
     return solution
 
