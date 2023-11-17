@@ -40,7 +40,7 @@ def EEF(I, method='REEF', get_variable_count=False):
             REEF: EEF with all 3 variable reductions
                 note: for d^l to be defined correctly for REEF, requires I.K <= I.n
             min: ILP model to find minimum number of variables
-            heuristic: TODO
+            heuristic: will find a heuristic solution for the minimum number activated variables
 
     Returns a solution containing information such as runtime (including time for preparations), number of variables etc. 
     If get_variable_count is true, will only return number of activated variables in EEF.
@@ -128,8 +128,8 @@ def EEF(I, method='REEF', get_variable_count=False):
             min_eef_solution = min_eef(I)
         elif method == 'heuristic':
             min_eef_solution = heuristic_eef(I)
-        else: # TODO: heuristic 2
-            pass
+        elif method == 'heuristic2':
+            min_eef_solution = heuristic2_eef(I)
 
         end_get_variables = time.time() - start_get_variable
 

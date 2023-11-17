@@ -99,3 +99,103 @@ def heuristic_eef(I):
 
     return solution
 
+
+
+###########################################
+############### HEURISTIC 2 ###############
+###########################################
+
+
+def count_arcs(I, C, exclude):
+    # count how often arcs occur in cycles that are not in exclude
+    count = {(a,b): 0 for (a,b) in I.A}
+    for i,cycle in enumerate(C):
+        if i in exclude:
+            continue
+        for (a,b) in arcs_in_cycle(cycle):
+            count[(a,b)] += 1
+    return count
+
+
+
+def heuristic2_eef(I):
+    """
+    Heuristic solution for finding minimum number of activated variables in the EEF.
+    Counts number of arcs in remaining cycles. Based on this, assignes a score to each node.
+    Ddds the arcs in the cycles that contain the node with the highest score. 
+    Repeats until all cycles are added.
+    """
+
+    ### preparations
+    C = get_cycles(I)
+    I.preparations_EEF()
+
+
+    ### define variables 
+    Y = dict()
+    Z = dict()
+    for l in range(I.n):
+        for (i,j) in I.A:
+            Y[(l,i,j)] = 0
+        for k in range(len(C)):
+            Z[(l,k)] = 0
+
+
+    ### main loop
+    added = set()
+    used_graphs = []
+    while len(added) < len(C): # all cycles need to be able to be made
+        count = count_arcs(I, C, added) # count arcs
+
+        ## get score for nodes
+        score = [0 for _ in range(I.n)] # score for nodes
+        for (a,b) in I.A:
+            score[a] += max(count[(a,b)] - 1, 0)
+            score[b] += max(count[(a,b)] - 1, 0)
+
+        for node in used_graphs: # do not allow used nodes again
+            score[node] = -1
+
+        ## find best node 
+        l = np.argmax(score)
+
+        ## find which cycles include this node
+        C_i = []
+        for i,cycle in enumerate(C):
+            if i in added:
+                continue
+            if l in cycle:
+                added.add(i)
+                C_i.append(cycle)
+                Z[(l,i)] = 1
+
+        ## activate variables corresponding to cycle
+        for cycle in C_i:
+            for (a,b) in arcs_in_cycle(cycle):
+                Y[(l,a,b)] = 1
+
+        used_graphs.append(l) # keep track of used nodes so they dont get used again
+
+    ### return solution
+    solution = min_eef_solution(I)
+
+    solution.dict_y = {}
+    solution.dict_z = {}
+    solution.yvalues = []
+    solution.zvalues = []
+
+    varcount1 = 0
+    varcount2 = 0
+
+    for l in range(I.n):
+        for (i,j) in I.A:
+            solution.dict_y[(l,i,j)] = varcount1
+            solution.yvalues.append(Y[(l,i,j)])
+            varcount1 += 1
+        for k in range(len(C)):
+            solution.dict_z[(l,k)] = varcount2
+            solution.zvalues.append(Z[(l,k)])
+            varcount2 += 1
+
+    return solution
+
