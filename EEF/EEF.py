@@ -48,7 +48,6 @@ def EEF(I, method='REEF', get_variable_count=False):
 
 
     ### create model
-    start_build = time.time()
     m = gp.Model('KEP REEF')
     m.ModelSense = GRB.MAXIMIZE
     m.setParam('OutputFlag', False)
@@ -56,6 +55,7 @@ def EEF(I, method='REEF', get_variable_count=False):
     m.setParam('MemLimit', 28)
 
 
+    start_get_variable = time.time()
     if method == 'REEF': # ordered instance
         ### preparations
         I.preparations_EEF() # creates set of arcs I.A
@@ -67,6 +67,9 @@ def EEF(I, method='REEF', get_variable_count=False):
         L_fancy = [l for l in range(L) if len(V_l[l]) > 0]
         A_l = [[(i,j) for (i,j) in I.A if (i in V_l[l] and j in V_l[l] and d[l][l,i] + 1 + d[l][j,l] <= I.K)] for l in range(L)] # A^l
 
+        end_get_variables = time.time() - start_get_variable
+
+        start_build = time.time()
 
         ### variables and objective (9a)
         vars = []
@@ -125,9 +128,12 @@ def EEF(I, method='REEF', get_variable_count=False):
             min_eef_solution = min_eef(I)
         elif method == 'heuristic':
             min_eef_solution = heuristic_eef(I)
-        else: # other heuristic ?
+        else: # TODO: heuristic 2
             pass
 
+        end_get_variables = time.time() - start_get_variable
+
+        start_build = time.time()
 
         ### variables and objective
         vars = []
@@ -208,6 +214,7 @@ def EEF(I, method='REEF', get_variable_count=False):
     ## for comparison
     solution.num_vars = m.NumVars
     solution.variance = np.var([x for x in nvars]) # variance of number of activated variables in graphs
+    solution.get_variables = end_get_variables
     solution.time_build_model = build_model # building time
     solution.runtime = m.Runtime # solving time
     solution.total_time = build_model + m.Runtime # total time
