@@ -10,7 +10,7 @@ from rules import *
 from CYCLE.CF import *
 from random_orders import random_orders
 from EEF.EEF import EEF
-
+from EEF.min_eef import *
 
 
 # example HCF
@@ -22,8 +22,13 @@ from EEF.EEF import EEF
 # nodes = ['A', 'B', 'C', 'D']
 # # nodes = ['B', 'C', 'D', 'A']
 # arcs = [('A','B'), ('B','C'), ('B','D'), ('C','A'), ('C','B'), ('D','C')]
-
 # K = 4
+
+# ### example triforce
+# nodes = [1, 2, 3, 4, 5, 6]
+# arcs = [(1, 2), (2, 3), (3, 1), (2, 4), (4, 5), (5, 2), (3, 5), (5, 6), (6, 3)]
+# K = 3
+
 
 ## example centrality measures
 # nodes = list(range(1,6))
@@ -33,20 +38,7 @@ from EEF.EEF import EEF
 # I = KEP_instance()
 # I.build_instance(arcs, nodes, K)
 
-# measure = betweenness_centrality(I)
-# print(measure)
-# print()
-# J = deepcopy(I)
-# J.sort(measure, change=True)
-# print(betweenness_centrality(J))
-# print(HCF(I, 'min'))
 
-
-
-# K = 4
-# path = r"C:\Users\pimvk\Documents\Code projects\Code BAOR Thesis\Instances\Small"
-# I = KEP_instance()
-# I.build_json_instance(path + '\\genjson-6.json', K)
 
 
 # for _ in range(20):
@@ -112,13 +104,15 @@ from EEF.EEF import EEF
 
 ################################################################
 
-# path = 'Instances/DGGKMPT/100-1.json'
-path ='Instances/Small/genjson-0.json'
-K = 4
+path = 'Instances/DGGKMPT/100-4.json'
+# path ='Instances/Small/genjson-0.json'
+K = 5
 I = KEP_instance()
 I.build_json_instance(path, K)
 
-solution = EEF(I, "heuristic")
+solution = EEF(I)
+print(solution.obj)
+solution = EEF(I, 'heuristic')
 print(solution.obj)
 
 # print(get_cycles(I))
