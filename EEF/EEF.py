@@ -214,10 +214,10 @@ def EEF(I, method='REEF', get_variable_count=False):
     ## for comparison
     solution.num_vars = m.NumVars
     solution.variance = np.var([x for x in nvars]) # variance of number of activated variables in graphs
-    solution.get_variables = end_get_variables
+    solution.get_variables = end_get_variables # time to get variables
     solution.time_build_model = build_model # building time
     solution.runtime = m.Runtime # solving time
-    solution.total_time = build_model + m.Runtime # total time
+    solution.total_time = end_get_variables + build_model + m.Runtime # total time
 
     return solution
 
