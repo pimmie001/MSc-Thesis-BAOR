@@ -34,8 +34,6 @@ def min_eef(I, time_limit=None):
     ### preparations
     I.preparations_EEF() # create set of arcs
     C = get_cycles(I) # create set of cycles
-    if time_limit is None:
-        time_limit = 600
 
 
     ### create model
@@ -92,7 +90,8 @@ def min_eef(I, time_limit=None):
     ### solve model
     # m.write("min_eef.lp")
     m.setParam('OutputFlag', False)
-    m.setParam('TimeLimit', time_limit)
+    if time_limit:
+        m.setParam('TimeLimit', time_limit)
     m.optimize()
 
 

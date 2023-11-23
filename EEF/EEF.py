@@ -33,7 +33,7 @@ def floyd_matrix(I, l):
 
 
 
-def EEF(I, method='REEF', get_variable_count=False):
+def EEF(I, method='REEF', get_variable_count=False, time_limit = None, time_limit_min = None):
     """
     Given instance I, solves the KEP using the Extended Edge Formulation (EEF)
     method: 
@@ -125,7 +125,7 @@ def EEF(I, method='REEF', get_variable_count=False):
     else: # unordered instance
         ### preparations
         if method == 'min':
-            min_eef_solution = min_eef(I)
+            min_eef_solution = min_eef(I, time_limit = time_limit_min)
         elif method == 'heuristic':
             min_eef_solution = heuristic_eef(I)
         elif method == 'heuristic2':
@@ -193,6 +193,8 @@ def EEF(I, method='REEF', get_variable_count=False):
 
     ### solve model
     # m.write(f"EEF.{method}.lp")
+    if time_limit:
+        m.setParam('TimeLimit', time_limit)
     m.optimize()
 
 
