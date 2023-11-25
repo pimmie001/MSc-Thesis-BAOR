@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from copy import deepcopy
 import itertools as it
+import time
 
 from HCF.HCF import HCF
 from HCF.min_hc import *
@@ -19,9 +20,9 @@ from EEF.min_eef import *
 # K = 3
 
 # # own example EEF
-# nodes = ['A', 'B', 'C', 'D']
+# nodes = ['C', 'B', 'A', 'D']
 # # nodes = ['B', 'C', 'D', 'A']
-# arcs = [('A','B'), ('B','C'), ('B','D'), ('C','A'), ('C','B'), ('D','C')]
+# arcs = [('A','B'), ('B','C'), ('C','D'), ('D','A'), ('B','D')]
 # K = 4
 
 # ### example triforce
@@ -29,41 +30,57 @@ from EEF.min_eef import *
 # arcs = [(1, 2), (2, 3), (3, 1), (2, 4), (4, 5), (5, 2), (3, 5), (5, 6), (6, 3)]
 # K = 3
 
-
 ## example centrality measures
 # nodes = list(range(1,6))
 # arcs = [(1,2), (1,3), (2,3), (3,4), (2,4), (4,5)]
 # K = 2
 
-# I = KEP_instance()
-# I.build_instance(arcs, nodes, K)
+## example EEF node ordering
+nodes = ['B', 'A', 'C', 'D']
+arcs = [('A', 'B'), ('B', 'A'), ('B', 'C'), ('C', 'B'), ('C', 'D'), ('D', 'C')]
+K = 4
+
+I = KEP_instance()
+I.build_instance(arcs, nodes, K)
+solution = EEF(I)
 
 
 
-
-# for _ in range(20):
+# A = []
+# for _ in range(10000):
 #     I.change_order(np.random.permutation(I.n))
-#     print(EEF(I, get_variable_count=True))
+#     A.append(EEF(I, get_variable_count=True))
+#     # print('\nRandom order')
+#     # print(f'number: {EEF(I, get_variable_count=True)}')
+#     # # EEF(I)
+#     # print('\n')
+# print(min(A))
+
 # print()
 # print(EEF(I, method='min', get_variable_count=True))
 
 
 
 ###
-
 # path = 'Instances/DGGKMPT/100-5.json'
-# # path = 'Instances/small/genjson-6.json'
+# path = 'Instances/small/genjson-6.json'
 
-# I = KEP_instance()
-# I.build_json_instance(path, 4)
+# A = []
+# start = time.time()
+# for i in range(20):
+#     path = f'Instances/DGGKMPT/100-{i}.json'
 
-# sol = EEF(I)
+#     I = KEP_instance()
+#     I.build_json_instance(path, 4)
 
+#     sol = EEF(I, 'min', get_variable_count=True)
+#     print(sol)
+# print(time.time() - start)
 # print(sol.time_build_model)
 # print(sol.runtime)
 # print(sol.obj)
 
-
+# [1431, 605, 533, 284, 893, 975, 708, 533, 1067, 450, 602, 647, 884, 947, 1025, 879, 894, 770, 1191, 1270]
 ########################
 
 
@@ -102,18 +119,18 @@ from EEF.min_eef import *
 # print(f'numconstr2 {solution2.num_constrs}')
 
 
-################################################################
+# ################################################################
+# for i in range(20):
+#     path = f'Instances/DGGKMPT/100-{i}.json'
+#     K = 5
+#     I = KEP_instance()
+#     I.build_json_instance(path, K)
 
-path = 'Instances/DGGKMPT/100-4.json'
-# path ='Instances/Small/genjson-0.json'
-K = 5
-I = KEP_instance()
-I.build_json_instance(path, K)
-
-solution = EEF(I)
-print(solution.obj)
-solution = EEF(I, 'heuristic')
-print(solution.obj)
+#     print(f'\nInstance {i}:')
+#     solution = EEF(I, 'heuristic', True)
+#     print(solution)
+#     solution = EEF(I, 'heuristic2', True)
+#     print(solution)
 
 # print(get_cycles(I))
 
