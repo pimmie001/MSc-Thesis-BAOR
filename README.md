@@ -1,3 +1,3 @@
 # MSc-Thesis-BAOR
 
-Evaluation of different variable reduction methods for the kidney exchange problem (KEP)
+Evaluating variable reduction procedures for the kidney exchange problem: Case studies for the half-cycle and extended edge formulations
